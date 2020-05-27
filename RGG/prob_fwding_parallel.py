@@ -84,7 +84,7 @@ def convert(s):
 
 if rank==0:
 	M = []
-	with open('RGG_M.txt','r') as f:
+	with open('./AdjMats/RGG_M.txt','r') as f:
 		for line in f:
 			newPlace=[]
 			currentPlace = line[1:-2]
