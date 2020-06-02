@@ -99,22 +99,24 @@ for lbda in lbda_values:
 	radius=1
 	Phi,nodes=createPPP(lbda,m)
 	M=createRGG(Phi,radius)
-	total_nodes = total_nodes+nodes
 	T=np.zeros(1)
 	transmitters=connected_components(M)
 	indices=sorted(range(len(transmitters)), reverse=True, key=lambda k: len(transmitters[k]))
 	T[0]=len(transmitters[indices[0]])
 	if rank==0:
 		Ttot=np.zeros(1)
+		total_nodes = np.zeros(1)
 	else:
 		Ttot=None
+		total_nodes = None
 	comm.Barrier()
 	comm.Reduce(T, Ttot, op=MPI.SUM, root=0)
+	comm.Reduce(nodes,total_nodes,op=MPI_SUM,root=0)
 	if rank==0:
 		start_time = datetime.datetime.now()
 		print(start_time)
 		print(lbda)
-		theta_lbda.append(Ttot[0]/nodes/size)
+		theta_lbda.append(Ttot[0]/total_nodes[0]/size)
 if rank==0:
 	print(lbda_values)
 	print(theta_lbda)
