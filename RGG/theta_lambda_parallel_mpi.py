@@ -19,7 +19,7 @@ size = comm.Get_size()
 #print(rank)
 
 def createPPP(lbda,m):
-	nodes=int(np.ceil(lbda*(m**2)))
+	nodes=np.random.poisson(lbda*(m**2))
 	l=m/2
 	#u_1 = np.random.uniform(-l, l, nodes-1) 
 	#u_2 = np.random.uniform(-l, l, nodes-1)
@@ -31,7 +31,7 @@ def createPPP(lbda,m):
 		#z[i]=complex(u_1[i-1],u_2[i-1])
 	for i in range(nodes):
 		z[i]=complex(u_1[i],u_2[i])	
-	return z
+	return z,nodes
 
 def createRGG(z,radius):
 	M=[[] for i in range(len(z))]
@@ -93,13 +93,13 @@ def connected_components(M):
 
 m=101
 theta_lbda=[]
-lbda_values=np.arange(4,5,0.01)
+lbda_values=np.arange(1,2,0.1)
+total_nodes = 0
 for lbda in lbda_values:
-	nodes=int(np.ceil(lbda*(m**2)))
 	radius=1
-	Phi=createPPP(lbda,m)
+	Phi,nodes=createPPP(lbda,m)
 	M=createRGG(Phi,radius)
-
+	total_nodes = total_nodes+nodes
 	T=np.zeros(1)
 	transmitters=connected_components(M)
 	indices=sorted(range(len(transmitters)), reverse=True, key=lambda k: len(transmitters[k]))
