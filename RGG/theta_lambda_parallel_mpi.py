@@ -94,7 +94,9 @@ def connected_components(M):
 m=101
 theta_lbda=[]
 lbda_values=np.arange(1,2,0.1)
-total_nodes = 0
+if rank==0:
+	start_time = datetime.datetime.now()
+	print(start_time)
 for lbda in lbda_values:
 	radius=1
 	Phi,nodes=createPPP(lbda,m)
