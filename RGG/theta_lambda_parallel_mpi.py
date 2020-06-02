@@ -113,7 +113,7 @@ for lbda in lbda_values:
 		total_nodes = None
 	comm.Barrier()
 	comm.Reduce(T, Ttot, op=MPI.SUM, root=0)
-	comm.Reduce(nodes,total_nodes,op=MPI_SUM,root=0)
+	comm.Reduce(nodes,total_nodes,op=MPI.SUM,root=0)
 	if rank==0:
 		start_time = datetime.datetime.now()
 		print(start_time)
