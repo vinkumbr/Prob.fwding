@@ -2,6 +2,8 @@
 
 from __future__ import division
 from mpi4py import MPI
+import os
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
 import numpy as np
 import math
 from array import *
@@ -102,6 +104,8 @@ for lbda in lbda_values:
 	Phi,nodes=createPPP(lbda,m)
 	M=createRGG(Phi,radius)
 	T=np.zeros(1)
+	nods=np.zeros(1)
+	nodes=nods[0]+nodes
 	transmitters=connected_components(M)
 	indices=sorted(range(len(transmitters)), reverse=True, key=lambda k: len(transmitters[k]))
 	T[0]=len(transmitters[indices[0]])
