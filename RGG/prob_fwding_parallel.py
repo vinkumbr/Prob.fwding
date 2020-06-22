@@ -7,7 +7,7 @@ import math
 from array import *
 from random import *
 import sys
-np.set_printoptions(threshold=np.nan)
+#np.set_printoptions(threshold=np.nan)
 
 import datetime
 
@@ -84,7 +84,7 @@ def convert(s):
 
 if rank==0:
 	M = []
-	with open('./AdjMats/RGG_M.txt','r') as f:
+	with open('./AdjMats/RGG_101_int_4.9.txt','r') as f:
 		for line in f:
 			newPlace=[]
 			currentPlace = line[1:-2]
@@ -99,13 +99,13 @@ else:
 M=comm.bcast(M,root=0)
 nodes=len(M)
 q=0
-start=0.359
-stop=0.3
-step=0.001
+start=0.3245
+stop=0.1
+step=0.0002
 delta=0.1
 p=start
 k=20
-n=32
+n=29
 if rank==0:
 	print(n)
 iter=size

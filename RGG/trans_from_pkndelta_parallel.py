@@ -84,7 +84,7 @@ def convert(s):
 
 if rank==0:
 	M = []
-	with open('./AdjMats/RGG_M.txt','r') as f:
+	with open('./AdjMats/RGG_101_int_4.9.txt','r') as f:
 		for line in f:
 			newPlace=[]
 			currentPlace = line[1:-2]
@@ -100,7 +100,7 @@ M=comm.bcast(M,root=0)
 nodes=len(M)
 q=0
 # This is the pkndelta values obtained using the prob_fwding_parallel.py code on RGG_M.txt
-pkndelta = [0.59,0.504,0.452,0.429,0.406,0.395,0.385,0.377,0.37,0.365,0.361,0.358,0.355,0.353,0.35,0.348,0.3464,0.3457,0.3439,0.342,0.341]
+pkndelta = [0.443,0.389,0.366,0.352,0.344,0.337,0.3332,0.3287,0.3256,0.3231,0.322,0.319,0.3175,0.3159,0.3151,0.3136,0.3128,0.3119,0.31080,0.3104,0.30940]
 k=20
 iter=size
 if rank==0:
