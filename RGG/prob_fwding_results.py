@@ -5,13 +5,17 @@ k=20
 delta=0.1
 m= 101
 #n=20:1:40
-print('Input lambda (4 or 4.54 or 4.9)')
+print('Input lambda (4 or 4.5 or 4.54 or 4.9)')
 lbda = float(input('lambda '))
 #Results of running prob_fwding_parallel.py on a RGG with M given by RGG_101_int_4.0.txt with m=101, lambda=4 and radius=1 
-
 if lbda==4:
 	pkndelta_simu=[0.58,0.51,0.48,0.455,0.435,0.43,0.421,0.412,0.409,0.4065,0.401,0.3995,0.397,0.395,0.3932,0.3914,0.3897,0.3882,0.3871,0.386,0.385]
 	tau_kndelta_simu=[470324.43, 427097.13, 415147.2, 400075.68, 386824.4, 391737.14, 390003.04, 382557.14, 387107.94, 391857.39, 386676.69, 395442.31, 400199.37, 395390.78, 401700.81, 401303.26, 408852.44, 407818.13, 409295.91, 417863.68, 418793.93]
+
+#Results of running prob_fwding_parallel.py on a RGG with M given by RGG_101_int_4.5.txt with m=101, lambda=4.5 and radius=1 
+if lbda == 4.5:
+	pkndelta_simu=[0.519,0.448,0.417,0.395,0.386,0.377,0.369,0.365,0.3605,0.357,0.355,0.35280,0.34980,0.34840,0.34720,0.3457,0.3438,0.34300,0.34210,0.3409,0.3401]
+	tau_kndelta_simu=[473877.0, 421523.66, 404229.58, 385503.37, 389178.52, 384351.29, 383509.59, 387956.2, 383379.07, 390788.11, 394998.01, 397147.49, 393409.78, 402471.6, 404411.08, 409427.06, 409307.46, 409587.61, 422560.22, 419275.77, 416047.03]
 
 #Results of running prob_fwding_parallel.py on a RGG with M given by RGG_M.txt with m=101, lambda=4.54 and radius=1 
 if lbda == 4.54:
