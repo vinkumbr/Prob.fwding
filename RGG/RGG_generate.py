@@ -67,6 +67,9 @@ def createRGG(z,radius):
 def generatevalidRGG(lbda,m,radius):
 	while True:
 		Phi=createPPP(lbda,m)
+		with open('./AdjMats/RGGlocs_%d_int_%s.txt'%(m,lbda), 'w') as f:
+			for item in Phi:
+				f.write("%s\n" % item)
 		M=createRGG(Phi,radius)
 		if isconnected(M):
 			print('RGG generated')
