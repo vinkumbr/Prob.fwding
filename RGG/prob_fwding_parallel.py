@@ -84,7 +84,7 @@ def convert(s):
 
 if rank==0:
 	M = []
-	with open('./AdjMats/RGG_101_int_4.9.txt','r') as f:
+	with open('./AdjMats/RGG_101_int_4.54.txt','r') as f:
 		for line in f:
 			newPlace=[]
 			currentPlace = line[1:-2]
@@ -99,7 +99,7 @@ else:
 M=comm.bcast(M,root=0)
 nodes=len(M)
 q=0
-start=0.3245
+start=0.348
 stop=0.1
 step=0.0002
 delta=0.1
