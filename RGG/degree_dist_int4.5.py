@@ -1,5 +1,4 @@
 from __future__ import division
-from mpi4py import MPI
 import numpy as np
 import math
 from array import *
@@ -7,6 +6,7 @@ from random import *
 import sys
 import datetime
 import matplotlib.pyplot as plt
+from scipy.stats import poisson
 
 # Python program to convert a list 
 # of character 
@@ -31,10 +31,12 @@ for i in range(1,10):
 			newPlace=[int(e) for e in s ]
 			M.append(newPlace)
 	max_deg = max([len(M[i]) for i in range(len(M))])
-	deg_dist = np.zeros(max_deg)
-	for i in range(len(M)):
-		deg_dist[len(M[i])] = deg_dist[len(M[i])]+1
-	ax.plot(range(max_deg),deg_dist,label = "Trace %d"%i)
+	deg_dist = np.zeros(max_deg+1)
+	for j in range(len(M)):
+		deg_dist[len(M[j])] = deg_dist[len(M[j])]+1
+	deg_dist = deg_dist/len(M)
+	ax.plot(range(max_deg+1),deg_dist,label = "Trace %d"%i)
+ax.plot(range(max_deg+1),poisson.pmf(range(max_deg+1),lbda*np.pi),'--',label='Poisson')
 
 plt.xlabel('Degree')
 plt.legend()
