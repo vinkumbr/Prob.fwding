@@ -2,7 +2,11 @@
 # The adjacency matrices for these are stored in ./AdjMats/RGG4.5_average/
 
 import matplotlib.pyplot as plt
+import json
 
+lbda = 4.5
+k=20
+m=101
 # With the pkndelta values taken as the ones obtained for ./AdjMats/RGG_101_int_4.5.txt which is
 pkndelta=[0.519,0.448,0.417,0.395,0.386,0.377,0.369,0.365,0.3605,0.357,0.355,0.35280,0.34980,0.34840,0.34720,0.3457,0.3438,0.34300,0.34210,0.3409,0.3401]
 # Transmissions for filename = RGG_101_int_4.5.txt
@@ -26,9 +30,25 @@ trans8=[474799.93, 424224.48, 407252.22, 393276.08, 395989.74, 394367.05, 390965
 # Transmissions for filename = RGG6_101_int_4.5.txt
 trans9=[474356.42, 426057.27, 410395.41, 397540.18, 398889.64, 400217.72, 398167.58, 403702.33, 402610.79, 404669.2, 414222.13, 416249.49, 416093.81, 421832.81, 426402.2, 428520.01, 430525.47, 434428.08, 442129.87, 441026.43, 446187.28]
 # Average number of transmissions
-avg_trans = tau_kndelta_simu+trans1+trans2+trans3+trans4+trans5+trans6+trans7+trans8+trans9
-avg_trans = avg_trans/10
+avg_trans = [tau_kndelta_simu[j]+trans1[j]+trans2[j]+trans3[j]+trans4[j]+trans5[j]+trans6[j]+trans7[j]+trans8[j]+trans9[j] for j in range(len(trans1))]
+avg_trans = [avg_trans[i]/10 for i in range(len(avg_trans))]
 n = range(20,41)
+
+
+#Ergodic result
+lbda_pkndelta = [lbda*p for p in pkndelta]
+
+#import from json file
+with open("theta_lambda.json") as f:
+	data = json.load(f)
+
+# The lambda values in the file are from 1 to 4.99 in steps of 0.01
+theta_lambda = data["theta_lambda"]
+theta_lambda_random = data["theta_lambda_random"]
+theta_lbda_kndelta = [theta_lambda[int((round(l,2)-1)/0.01)] for l in lbda_pkndelta]
+theta_lbda_kndelta_square = [i**2 for i in theta_lbda_kndelta]
+tau_kndelta_ergodic = [(k+i)*m**2*lbda_pkndelta[i]*theta_lbda_kndelta_square[i] for i in range(len(lbda_pkndelta))]
+
 
 fig,ax = plt.subplots(1,1)
 fig.suptitle('For an RGG in a 101 by 101 grid with connection radius =1 and intensity 4.5 with k=20 packets and delta = 0.1. ')
@@ -43,6 +63,7 @@ ax.plot(n,trans7,label='Trace 7')
 ax.plot(n,trans8,label='Trace 8')
 ax.plot(n,trans9,label='Trace 9')
 ax.plot(n,avg_trans,'o',label='Average')
+ax.plot(n,tau_kndelta_ergodic,label='Ergodic')
 ax.set_title('Number of coded packets')
 plt.xlabel('Intensity (\lambda)')
 
