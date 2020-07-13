@@ -63,7 +63,7 @@ ax.plot(n,trans7,label='Trace 7')
 ax.plot(n,trans8,label='Trace 8')
 ax.plot(n,trans9,label='Trace 9')
 ax.plot(n,avg_trans,'o',label='Average')
-ax.plot(n,tau_kndelta_ergodic,label='Ergodic')
+ax.plot(n,tau_kndelta_ergodic,'--',label='Ergodic')
 ax.set_title('Number of coded packets')
 plt.xlabel('Intensity (\lambda)')
 
