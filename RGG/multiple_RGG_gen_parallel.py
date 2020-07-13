@@ -84,6 +84,11 @@ if rank ==0:
 	m=int(input('m '))
 	radius=float(input('radius '))
 	number=int(input('number'))
+else:
+	lbda = 0
+	m = 101
+	radius = 1
+	number = 100
 
 lbda = comm.bcast(lbda,root=0)
 m = comm.bcast(m,root=0)
