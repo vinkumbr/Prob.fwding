@@ -78,15 +78,18 @@ def generatevalidRGG(lbda,m,radius,number):
 		for item in M:
 			f.write("%s\n" % item)
 	i=i+1
+if rank ==0:
+	print('Input lambda, size of grid (m), radius and the number of graphs you want')
+	lbda=float(input('lambda '))
+	m=int(input('m '))
+	radius=float(input('radius '))
+	number=int(input('number'))
 
-print('Input lambda, size of grid (m), radius and the number of graphs you want')
-lbda=input('lambda ')
-m=input('m ')
-radius=input('radius ')
-lbda=float(lbda)
-m=int(m)
-radius=float(radius)
-number=int(input('number'))
+lbda = comm.bcast(lbda,root=0)
+m = comm.bcast(m,root=0)
+radius = comm.bcast(radius,root=0)
+number = comm.bcast(number,root=0)
+
 generatevalidRGG(lbda,m,radius,number)
 
 
