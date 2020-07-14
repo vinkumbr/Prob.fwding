@@ -83,7 +83,6 @@ if rank ==0:
 	lbda=float(input('lambda '))
 	m=int(input('m '))
 	radius=float(input('radius '))
-	number=int(input('number'))
 else:
 	lbda = 0
 	m = 101
@@ -92,7 +91,6 @@ else:
 lbda = comm.bcast(lbda,root=0)
 m = comm.bcast(m,root=0)
 radius = comm.bcast(radius,root=0)
-number = comm.bcast(number,root=0)
 
 generatevalidRGG(lbda,m,radius)
 
