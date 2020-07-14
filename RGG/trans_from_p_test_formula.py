@@ -91,7 +91,7 @@ with open('./AdjMats/test_formula/RGG_101_int_4.5_id_%d.txt'%(rank),'r') as f:
 		try:
 			newPlace=[int(e) for e in s]
 		except:
-			print(rank)
+			newPlace=[]
 		M.append(newPlace)
 
 nodes=len(M)
@@ -102,6 +102,9 @@ iterations = 100
 tau = np.zeros(len(pkndelta))
 tau_kndelta = np.zeros(len(pkndelta))
 for l in range(len(pkndelta)):
+	if rank == 0:
+		print(datetime.datetime.now())
+		print(l)
 	n=k
 	p=pkndelta[l]
 	trans = np.zeros(len(pkndelta))
