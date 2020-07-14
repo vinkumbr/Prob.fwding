@@ -88,7 +88,10 @@ with open('./AdjMats/test_formula/RGG_101_int_4.5_id_%d.txt'%(rank),'r') as f:
 		currentPlace = line[1:-2]
 		r=convert(currentPlace)
 		s=r.split(', ')
-		newPlace=[int(e) for e in s ]
+		try:
+			newPlace=[int(e) for e in s]
+		except:
+			print(rank)
 		M.append(newPlace)
 
 nodes=len(M)
