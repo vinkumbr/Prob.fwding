@@ -68,7 +68,7 @@ def createRGG(z,radius):
 				M[j].append(i)
 	return M
 
-def generatevalidRGG(lbda,m,radius,number):
+def generatevalidRGG(lbda,m,radius):
 	Phi=createPPP(lbda,m)
 	#with open('./AdjMats/test_formula/RGGlocs_%d_int_%s.txt'%(m,lbda), 'w') as f:
 	#	for item in Phi:
@@ -77,9 +77,9 @@ def generatevalidRGG(lbda,m,radius,number):
 	with open('./AdjMats/test_formula/RGG_%d_int_%s_id_%d.txt'%(m,lbda,rank), 'w') as f:
 		for item in M:
 			f.write("%s\n" % item)
-	i=i+1
+
 if rank ==0:
-	print('Input lambda, size of grid (m), radius and the number of graphs you want')
+	print('Input lambda, size of grid (m) and the radius ')
 	lbda=float(input('lambda '))
 	m=int(input('m '))
 	radius=float(input('radius '))
@@ -88,13 +88,12 @@ else:
 	lbda = 0
 	m = 101
 	radius = 1
-	number = 100
 
 lbda = comm.bcast(lbda,root=0)
 m = comm.bcast(m,root=0)
 radius = comm.bcast(radius,root=0)
 number = comm.bcast(number,root=0)
 
-generatevalidRGG(lbda,m,radius,number)
+generatevalidRGG(lbda,m,radius)
 
 
