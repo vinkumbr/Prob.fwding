@@ -96,7 +96,7 @@ with open('./AdjMats/test_formula/RGG_101_int_4.5_id_%d.txt'%(rank),'r') as f:
 
 nodes=len(M)
 # This is the pkndelta values obtained using the prob_fwding_parallel.py code on RGG_M.txt
-pkndelta = [0.4,0.5,0.6,0.7,0.8,0.9,1]
+pkndelta = [0.4,0.5,0.6,0.7,0.8,0.9]
 k=1
 iterations = 100
 tau = np.zeros(len(pkndelta))
@@ -118,7 +118,9 @@ for l in range(len(pkndelta)):
 		b[0]=1 # // takes the floor value
 		[transmitters,receivers]=connected_components(nodes,M,b)
 		trans[l] = trans[l]+len(list(transmitters[0]))
-tau = trans/iterations
+	if rank==0:
+		print(trans[l]/iterations)
+	tau[l] = trans[l]/iterations
 comm.Barrier()
 comm.Reduce(tau, tau_kndelta, op=MPI.SUM, root=0)
 if rank==0:
