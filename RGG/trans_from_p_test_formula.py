@@ -96,7 +96,7 @@ with open('./AdjMats/test_formula/RGG_101_int_4.5_id_%d.txt'%(rank),'r') as f:
 
 nodes=len(M)
 # This is the pkndelta values obtained using the prob_fwding_parallel.py code on RGG_M.txt
-pkndelta = [0.4,0.5,0.6,0.7,0.8,0.9]
+pkndelta = [0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.41,0.42,0.43,0.44,0.45]
 k=1
 iterations = 100
 tau = np.zeros(len(pkndelta))
@@ -122,6 +122,10 @@ for l in range(len(pkndelta)):
 		print(trans[l]/iterations)
 	tau[l] = trans[l]/iterations
 comm.Barrier()
+recvbuf = None
+if rank == 0:
+	recvbuf = np.zeros([size,len(pkndelta)])
+comm.Gather(tau,recvbuf,root=0)
 comm.Reduce(tau, tau_kndelta, op=MPI.SUM, root=0)
 if rank==0:
 	start_time = datetime.datetime.now()
@@ -129,7 +133,10 @@ if rank==0:
 	tau_kndelta = tau_kndelta/size
 	print(tau_kndelta)
 	f=open('./AdjMats/test_formula/trans_average_single_pkt.txt','a')
+	f.write(str(pkndelta)+'\n')
 	f.write(str(tau_kndelta)+'\n')
 	f.write(str(datetime.datetime.now())+'\n')
+	for i in range(size):
+		    f.write(str(recvbuf[i,:])+'\n')
 	f.close()
 
