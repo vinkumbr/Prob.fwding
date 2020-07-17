@@ -9,6 +9,7 @@ import math
 from array import *
 from random import *
 import sys
+import json
 #np.set_printoptions(threshold=np.nan)
 
 import datetime
@@ -93,9 +94,9 @@ def connected_components(M):
 	#print(receivers)
 	return transmitters
 
-m=101
+m=401
 theta_lbda=[]
-lbda_values=np.arange(2,3,0.1)
+lbda_values=np.arange(1,1.75,0.01)
 if rank==0:
 	start_time = datetime.datetime.now()
 	print(start_time)
@@ -125,7 +126,12 @@ for lbda in lbda_values:
 		theta_lbda.append(Ttot[0]/total_nodes[0])
 if rank==0:
 	print(lbda_values)
-	print(theta_lbda)
+	print(theta_lbda).
+	dict={"lbda":lbda_values,"theta_lambda":theta_lbda}
+	json = json.dumps(dict)
+	f= open("theta_lambda_%d.json"%(m),"w")
+	f.write(json)
+	f.close()
 
 
 
