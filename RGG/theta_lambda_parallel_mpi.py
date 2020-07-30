@@ -97,6 +97,7 @@ def connected_components(M):
 m=251
 theta_lbda=[]
 lbda_values=np.arange(1,1.2,0.01)
+
 if rank==0:
 	start_time = datetime.datetime.now()
 	print(start_time)
@@ -129,7 +130,6 @@ for lbda in lbda_values:
 		f.write(str(lbda)+'\n')
         	f.write(str(Ttot[0]/total_nodes[0])+'\n')
 	        f.close()
-
 if rank==0:
 	print(lbda_values)
 	print(theta_lbda)
