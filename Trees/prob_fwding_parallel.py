@@ -7,7 +7,7 @@ import math
 from array import *
 from random import *
 import sys
-
+#np.set_printoptions(threshold=np.nan)
 
 import datetime
 
@@ -97,21 +97,25 @@ else:
 	M=None
 
 M=comm.bcast(M,root=0)
+rootstop = 0
 nodes=len(M)
 q=0
-# This is the pkndelta values obtained using the prob_fwding_parallel.py code on RGG_M.txt
-pkndelta = [0.9999,0.9932,0.985,0.9772,0.9702,0.9636,0.9569,0.9508,0.9451,0.9397,0.9348]
+start=0.935
+stop=0.9
+step=0.0001
+delta=0.1
+p=start
 k=100
-iter=size
+n=200
 if rank==0:
-	tau_kndelta = []
-	#print(n)
-	print(iter)
-for l in range(len(pkndelta)):
-	tau = np.zeros(1)
-	n=k+10*l
-	p=pkndelta[l]
-	trans = np.zeros(1)
+	print(n)
+iter=size
+recs=[]
+#print(rank)
+
+while p>=stop and rootstop == 0:
+	R_succ=np.zeros(1)
+	R=np.zeros(nodes)
 	for i in range(n):
 		transmitters={}
 		receivers={}
@@ -119,30 +123,38 @@ for l in range(len(pkndelta)):
 		b=np.zeros(nodes)
 		for r in range(1,nodes):
 			b[r]=(unif_mat[r]<p)
-		b[0]=1 # // takes the floor value
+		b[0]=1 
 		[transmitters,receivers]=connected_components(nodes,M,b)
-		trans[0] = trans[0]+len(list(transmitters[0]))
+		#print(list(transmitters[0]))
+		R[list(receivers[0])]+=1
+		R[list(transmitters[0])]+=1
+	R_succ[0]=len(R[R>=k])
+	#print(R_succ[0])
+	ER_succ=np.zeros(1)
 	comm.Barrier()
-	comm.Reduce(trans, tau, op=MPI.SUM, root=0)
+	comm.Reduce(R_succ, ER_succ, op=MPI.SUM, root=0)
 	if rank==0:
 		start_time = datetime.datetime.now()
 		print(p)
-		print(n)
 		print(start_time)
-		tau_kndelta.append(tau[0]/(iter))
-		print(tau_kndelta[q])
+		recs.append(ER_succ[0]/(iter*nodes))
+		print(recs[q])
+		if recs[q]<(1-delta):
+			rootstop = 1
+	rootstop = comm.bcast(rootstop,root=0)
+	p=p-step
 	q=q+1
+
 if rank==0:
-	f=open('tau_kndelta.txt','a')
+	print(nodes)
+	f=open('pkndelta.txt','a')
 	f.write(str(k)+'\n')
-	#f.write(str(n)+'\n')
-	f.write(str(tau_kndelta)+'\n')
+	f.write(str(n)+'\n')
+	f.write(str(p)+'\n')
 	f.write(str(datetime.datetime.now())+'\n')
 	print(k)
-	print(nodes)
-	print(tau_kndelta)
-	#print(n)
-	#print(p+step)
+	print(n)
+	print(p+step)
 	print(datetime.datetime.now())
 	f.close()
 

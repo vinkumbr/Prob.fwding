@@ -96,7 +96,8 @@ def connected_components(M):
 
 m=251
 theta_lbda=[]
-lbda_values=np.arange(1.5,1.6,0.01)
+lbda_values=np.arange(1,1.2,0.01)
+
 if rank==0:
 	start_time = datetime.datetime.now()
 	print(start_time)
@@ -125,16 +126,16 @@ for lbda in lbda_values:
 		print(lbda)
 		print(Ttot[0]/total_nodes[0])
 		theta_lbda.append(Ttot[0]/total_nodes[0])
-		f= open("theta_lambda_%d.txt"%(m),'a')
+        	f= open("theta_lambda_%d.txt"%(m),'a')
 		f.write(str(lbda)+'\n')
-		f.write(str(Ttot[0]/total_nodes[0])+'\n')
-		f.close()
+        	f.write(str(Ttot[0]/total_nodes[0])+'\n')
+	        f.close()
 if rank==0:
 	print(lbda_values)
 	print(theta_lbda)
 	dict={"lbda":lbda_values,"theta_lambda":theta_lbda}
 	json = json.dumps(dict)
-	f= open("theta_lambda_%d.json"%(m),"w")
+	f= open("theta_lambda_%d.json"%(m),'a')
 	f.write(json)
 	f.close()
 
