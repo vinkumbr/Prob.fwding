@@ -18,8 +18,9 @@ with open("theta_lambda.json") as f:
 
 # The lambda values in the file are from 1 to 4.99 in steps of 0.01
 theta_lambda = data["theta_lambda"]
+theta_lambda_251 = data["theta_lambda_251"]
 theta_lambda_random = data["theta_lambda_random"]
-theta_lbda_kndelta = [theta_lambda[int((round(k,2)-1)/0.01)] for k in lbda_pkndelta]
+theta_lbda_kndelta = [theta_lambda_251[int((round(k,2)-1)/0.01)] for k in lbda_pkndelta]
 theta_lbda_kndelta_square = [i**2 for i in theta_lbda_kndelta]
 
 tau_kndelta_ergodic = [m**2*lbda_pkndelta[i]*theta_lbda_kndelta_square[i] for i in range(len(lbda_pkndelta))]

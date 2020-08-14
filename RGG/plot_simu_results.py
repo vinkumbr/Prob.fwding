@@ -21,12 +21,14 @@ fig.suptitle('For an (instantiation of) RGG of intensity %1.2f spread in a 101 b
 ax1.plot(n,pkndelta_simu,'o-', label='m=101')
 ax1.plot(n,pkndelta_simu_big,'s-', label='m=121')
 ax1.set_title('Minimum forwarding probability')
+ax1.legend()
+
 ax2.plot(n,tau_kndelta_simu,'o-', label='m=101')
 ax2.plot(n,tau_kndelta_simu_big,'s-', label='m=121')
 ax2.plot(n,tau_kndelta_ergodic,'+--',label='from theory')
 ax2.set_title('Expected number of transmissions')
 plt.xlabel('Number of coded packets (n)')
 
-plt.legend()
+ax2.legend()
 plt.show()
 
