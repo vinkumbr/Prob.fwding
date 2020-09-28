@@ -96,7 +96,8 @@ with open('./AdjMats/test_formula/RGG_101_int_4.5_id_%d.txt'%(rank),'r') as f:
 
 nodes=len(M)
 # This is the pkndelta values obtained using the prob_fwding_parallel.py code on RGG_M.txt
-pkndelta = [0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.41,0.42,0.43,0.44,0.45]
+pkndelta = np.arange(0.35,0.36,0.001)
+pkndelta = list(pkndelta)
 k=1
 iterations = 100
 tau = np.zeros(len(pkndelta))

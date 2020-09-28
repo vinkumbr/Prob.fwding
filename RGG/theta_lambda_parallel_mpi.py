@@ -96,7 +96,7 @@ def connected_components(M):
 
 m=251
 theta_lbda=[]
-lbda_values=np.arange(1,1.2,0.01)
+lbda_values=np.arange(2,2.1,0.01)
 
 if rank==0:
 	start_time = datetime.datetime.now()
