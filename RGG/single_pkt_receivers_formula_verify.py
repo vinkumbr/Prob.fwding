@@ -95,7 +95,7 @@ def connected_components(nodes,M,b):
 	# Return the list of groups.
 	return transmitters,receivers
 
-m=251
+m=25
 lbda = 4.5
 p_values = np.arange(0.33,0.5,0.005)
 
@@ -112,11 +112,12 @@ for p in p_values:
 	TR = np.zeros(1)
 	nods=np.zeros(1)
 	nodes=nods[0]+nodes
-	b=np.zeros(nodes)
-	for r in range(1,nodes):
+	unif_mat=[random() for r in range(int(nodes))]
+	b=np.zeros(int(nodes))
+	for r in range(1,int(nodes)):
 		b[r]=(unif_mat[r]<p)
 	b[0]=1 # // takes the floor value
-	transmitters,receivers = connected_components(nodes,M,b)
+	transmitters,receivers = connected_components(int(nodes),M,b)
 	indices=sorted(range(len(transmitters)), reverse=True, key=lambda k: len(transmitters[k]))
 	T[0] = len(transmitters[indices[0]])
 	R[0] = len(receivers[0])
@@ -142,7 +143,7 @@ for p in p_values:
 		f.close()
 if rank==0:
 	print(p_values)
-	print(recs_lbda)
+	print(recs)
 	dict={"lbda":lbda,"p":p_values,"recs":recs,"total_nodes":total_nodes}
 	json = json.dumps(dict)
 	f= open("single_pkt_recs.json"%(m),'a')
