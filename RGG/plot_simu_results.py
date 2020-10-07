@@ -16,15 +16,18 @@ tau_kndelta_simu = data["tau_kndelta_simu"]
 tau_kndelta_ergodic = data["tau_kndelta_ergodic"]
 tau_kndelta_simu_big = data["tau_kndelta_simu_big"]
 
-fig,(ax1,ax2) = plt.subplots(2,1)
-fig.suptitle('For an (instantiation of) RGG of intensity %1.2f spread in a 101 by 101 grid with connection radius =1. Probabilistic forwarding done with k=20 packets and delta = 0.1'% lbda)
+fig1,ax1 = plt.subplots(1,1)
+fig1.set_size_inches(5, 2)
+#fig.suptitle('For an (instantiation of) RGG of intensity %1.2f spread in a 101 by 101 grid with connection radius =1. Probabilistic forwarding done with k=20 packets and delta = 0.1'% lbda)
 ax1.plot(n,pkndelta_simu,'o-', label='m=101')
-ax1.plot(n,pkndelta_simu_big,'s-', label='m=121')
+#ax1.plot(n,pkndelta_simu_big,'s-', label='m=121')
 ax1.set_title('Minimum forwarding probability')
 ax1.legend()
 
+fig2,ax2 = plt.subplots(1,1)
+fig2.set_size_inches(5, 2)
 ax2.plot(n,tau_kndelta_simu,'o-', label='m=101')
-ax2.plot(n,tau_kndelta_simu_big,'s-', label='m=121')
+#ax2.plot(n,tau_kndelta_simu_big,'s-', label='m=121')
 ax2.plot(n,tau_kndelta_ergodic,'+--',label='from theory')
 ax2.set_title('Expected number of transmissions')
 plt.xlabel('Number of coded packets (n)')
