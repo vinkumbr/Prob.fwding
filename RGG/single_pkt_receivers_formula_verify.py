@@ -95,7 +95,7 @@ def connected_components(nodes,M,b):
 	# Return the list of groups.
 	return transmitters,receivers
 
-m=25
+m=101
 lbda = 4.5
 p_values = np.arange(0.33,0.5,0.005)
 
@@ -140,6 +140,7 @@ for p in p_values:
 		f= open("single_pkt_recs.txt",'a')
 		f.write(str(p)+'\n')
 		f.write(str(TRtot[0]/total_nodes[0]/size)+'\n')
+		f.write(str(TRtot[0]/size)+'\n')
 		f.close()
 if rank==0:
 	print(p_values)
