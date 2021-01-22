@@ -1,11 +1,14 @@
 import json
+import numpy as np
+import scipy.special as sp
+from scipy.interpolate import interp1d
 
 # From simulations
 k=20
 delta=0.1
 m= 101
 #n=20:1:40
-print('Input lambda (4 or 4.5 or 4.54 or 4.9) and size m (101 or 121)')
+print('Input lambda (4 or 4.5 or 4.54 or 4.9)')# and size m (101 or 121)')
 lbda = float(input('lambda '))
 #Results of running prob_fwding_parallel.py on a RGG with M given by RGG_101_int_4.0.txt with m=101, lambda=4 and radius=1 
 if lbda==4:
@@ -48,6 +51,7 @@ with open("theta_lambda.json") as f:
 	data = json.load(f)
 
 # The lambda values in the file are from 1 to 4.99 in steps of 0.01
+lamb = data["lambda"]
 theta_lambda = data["theta_lambda"]
 theta_lambda_251 = data["theta_lambda_251"]
 theta_lambda_random = data["theta_lambda_random"]
@@ -56,7 +60,38 @@ theta_lbda_kndelta_square = [i**2 for i in theta_lbda_kndelta]
 
 tau_kndelta_ergodic = [(k+i)*lbda_pkndelta[i]*theta_lbda_kndelta_square[i] for i in range(len(lbda_pkndelta))]
 
-dict={"lbda":lbda,"pkndelta_simu":pkndelta_simu,"tau_kndelta_simu":tau_kndelta_simu,"tau_kndelta_ergodic":tau_kndelta_ergodic,"pkndelta_simu_big":pkndelta_simu_big,"tau_kndelta_simu_big":tau_kndelta_simu_big}
+p = np.arange(0.33,0.5,0.0000001)
+lbda_p = lbda*p
+f = interp1d(lamb,theta_lambda_251)
+theta_lbda_p = f(lbda_p)
+theta_plus_lower = theta_lbda_p #theta(4*lbda_p) term is omitted since it is close to 1
+theta_plus_upper = p*theta_lbda_p#+(1-p)
+index = 0
+pkndelta_ergodic_upper = np.zeros(k+1)
+pkndelta_ergodic_lower = np.zeros(k+1)
+n=k
+while n<=40:
+	exp_recs_upper = np.zeros(len(p))
+	exp_recs_lower = np.zeros(len(p))
+	total_upper = np.zeros(len(p))
+	total_lower = np.zeros(len(p))
+	for j in range(k,n+1):
+		term_upper = sp.binom(n,j)*theta_plus_upper**j*(1-theta_plus_upper)**(n-j)
+		term_lower = sp.binom(n,j)*theta_plus_lower**j*(1-theta_plus_lower)**(n-j)
+		total_upper = total_upper+term_upper
+		total_lower = total_lower+term_lower
+	exp_recs_upper = theta_lbda_p*total_upper
+	exp_recs_lower = theta_lbda_p*total_lower
+	print(n,np.where(exp_recs_upper>(1-delta))[0])
+	pkndelta_ergodic_upper[index] = p[np.where(exp_recs_lower>(1-delta))[0][0]]
+	pkndelta_ergodic_lower[index] = p[np.where(exp_recs_upper>(1-delta))[0][0]]
+	index = index+1
+	n=n+1
+print(pkndelta_ergodic_lower,pkndelta_ergodic_upper)
+
+
+
+dict={"lbda":lbda,"pkndelta_simu":pkndelta_simu,"pkndelta_ergodic_lower":list(pkndelta_ergodic_lower),"pkndelta_ergodic_upper":list(pkndelta_ergodic_upper),"tau_kndelta_simu":tau_kndelta_simu,"tau_kndelta_ergodic":tau_kndelta_ergodic,"pkndelta_simu_big":pkndelta_simu_big,"tau_kndelta_simu_big":tau_kndelta_simu_big}
 json = json.dumps(dict)
 f= open("simu_results.json","w")
 f.write(json)
