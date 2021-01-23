@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import scipy.special as sp
+from scipy.stats import binom
 from scipy.interpolate import interp1d
 
 # From simulations
@@ -11,9 +12,10 @@ m= 101
 print('Input lambda (4 or 4.5 or 4.54 or 4.9)')# and size m (101 or 121)')
 lbda = float(input('lambda '))
 #Results of running prob_fwding_parallel.py on a RGG with M given by RGG_101_int_4.0.txt with m=101, lambda=4 and radius=1 
-if lbda==4:
-	pkndelta_simu=[0.58,0.51,0.48,0.455,0.435,0.43,0.421,0.412,0.409,0.4065,0.401,0.3995,0.397,0.395,0.3932,0.3914,0.3897,0.3882,0.3871,0.386,0.385]
-	tau_kndelta_simu=[470324.43, 427097.13, 415147.2, 400075.68, 386824.4, 391737.14, 390003.04, 382557.14, 387107.94, 391857.39, 386676.69, 395442.31, 400199.37, 395390.78, 401700.81, 401303.26, 408852.44, 407818.13, 409295.91, 417863.68, 418793.93]
+#if lbda==4:
+pkndelta_simu1=[0.58,0.51,0.48,0.455,0.435,0.43,0.421,0.412,0.409,0.4065,0.401,0.3995,0.397,0.395,0.3932,0.3914,0.3897,0.3882,0.3871,0.386,0.385]
+tau_kndelta_simu1=[470324.43, 427097.13, 415147.2, 400075.68, 386824.4, 391737.14, 390003.04, 382557.14, 387107.94, 391857.39, 386676.69, 395442.31, 400199.37, 395390.78, 401700.81, 401303.26, 408852.44, 407818.13, 409295.91, 417863.68, 418793.93]
+tau_kndelta_simu1=[t/(101*101) for t in tau_kndelta_simu1]
 
 #Results of running prob_fwding_parallel.py on a RGG with M given by RGG_101_int_4.5.txt with m=101, lambda=4.5 and radius=1 
 if lbda == 4.5:
@@ -34,8 +36,8 @@ if lbda == 4.54:
 if lbda == 4.9:
 	pkndelta_simu=[0.443,0.389,0.366,0.352,0.344,0.337,0.3332,0.3287,0.3256,0.3231,0.322,0.319,0.3175,0.3159,0.3151,0.3136,0.3128,0.3119,0.31080,0.3104,0.30940]
 	tau_kndelta_simu=[439837.94, 398625.25, 387033.95, 379955.03, 380665.53, 379832.85, 385735.42, 386591.03, 389623.16, 395614.26, 403680.93, 397214.78, 404585.22, 407071.51, 415057.73, 418603.48, 423912.41, 426199.1, 423906.22, 434126.27, 433942.22]
-
 tau_kndelta_simu = [i/101/101 for i in tau_kndelta_simu]
+
 
 #if lbda == 4.5:
 #Results of running prob_fwding_parallel.py on a RGG with M given by RGG_121_int_4.5.txt with m=121, lambda=4.5 and radius=1 
@@ -58,40 +60,36 @@ theta_lambda_random = data["theta_lambda_random"]
 theta_lbda_kndelta = [theta_lambda_251[int((round(k,2)-1)/0.01)] for k in lbda_pkndelta]
 theta_lbda_kndelta_square = [i**2 for i in theta_lbda_kndelta]
 
-tau_kndelta_ergodic = [(k+i)*lbda_pkndelta[i]*theta_lbda_kndelta_square[i] for i in range(len(lbda_pkndelta))]
+#tau_kndelta_ergodic = [(k+i)*lbda_pkndelta[i]*theta_lbda_kndelta_square[i] for i in range(len(lbda_pkndelta))]
 
-p = np.arange(0.33,0.5,0.0000001)
+p = np.arange(0.3,0.5,0.0000001)
 lbda_p = lbda*p
 f = interp1d(lamb,theta_lambda_251)
 theta_lbda_p = f(lbda_p)
-theta_plus_lower = theta_lbda_p #theta(4*lbda_p) term is omitted since it is close to 1
-theta_plus_upper = p*theta_lbda_p#+(1-p)
+theta_plus = theta_lbda_p 
 index = 0
-pkndelta_ergodic_upper = np.zeros(k+1)
-pkndelta_ergodic_lower = np.zeros(k+1)
+pkndelta_ergodic = np.zeros(k+1)
 n=k
 while n<=40:
-	exp_recs_upper = np.zeros(len(p))
-	exp_recs_lower = np.zeros(len(p))
-	total_upper = np.zeros(len(p))
-	total_lower = np.zeros(len(p))
-	for j in range(k,n+1):
-		term_upper = sp.binom(n,j)*theta_plus_upper**j*(1-theta_plus_upper)**(n-j)
-		term_lower = sp.binom(n,j)*theta_plus_lower**j*(1-theta_plus_lower)**(n-j)
-		total_upper = total_upper+term_upper
-		total_lower = total_lower+term_lower
-	exp_recs_upper = theta_lbda_p*total_upper
-	exp_recs_lower = theta_lbda_p*total_lower
-	print(n,np.where(exp_recs_upper>(1-delta))[0])
-	pkndelta_ergodic_upper[index] = p[np.where(exp_recs_lower>(1-delta))[0][0]]
-	pkndelta_ergodic_lower[index] = p[np.where(exp_recs_upper>(1-delta))[0][0]]
+	minp_index = 0
+	prob = lbda*(1-binom.cdf(k,n,theta_lbda_p**2))
+	try:
+		minp_index = min(np.where(prob>(1-delta))[0])
+	except:
+		minp_index = -1
+	pkndelta_ergodic[index] = p[minp_index] 
 	index = index+1
 	n=n+1
-print(pkndelta_ergodic_lower,pkndelta_ergodic_upper)
+prob_from_simu = np.array(pkndelta_simu)
+thetaplus_pfs = f(lbda*prob_from_simu)
+tau_kndelta_pfs = lbda*prob_from_simu*thetaplus_pfs**2*np.arange(k,k+len(prob_from_simu))
+thetaplus_lambdap = f(lbda*pkndelta_ergodic)
+tau_kndelta_ergodic = lbda*pkndelta_ergodic*thetaplus_lambdap**2*np.arange(k,k+len(pkndelta_ergodic))
 
+#print(pkndelta_ergodic)
+#print(tau_kndelta_ergodic)
 
-
-dict={"lbda":lbda,"pkndelta_simu":pkndelta_simu,"pkndelta_ergodic_lower":list(pkndelta_ergodic_lower),"pkndelta_ergodic_upper":list(pkndelta_ergodic_upper),"tau_kndelta_simu":tau_kndelta_simu,"tau_kndelta_ergodic":tau_kndelta_ergodic,"pkndelta_simu_big":pkndelta_simu_big,"tau_kndelta_simu_big":tau_kndelta_simu_big}
+dict={"lbda":lbda,"pkndelta_simu":pkndelta_simu,"pkndelta_simu1":pkndelta_simu1,"pkndelta_ergodic":list(pkndelta_ergodic),"prob_from_simu":list(prob_from_simu),"pkndelta_simu_big":pkndelta_simu_big,"tau_kndelta_simu":tau_kndelta_simu,"tau_kndelta_simu1":tau_kndelta_simu1,"tau_kndelta_pfs":list(tau_kndelta_pfs),"tau_kndelta_simu_big":tau_kndelta_simu_big,"tau_kndelta_ergodic":list(tau_kndelta_ergodic)}
 json = json.dumps(dict)
 f= open("simu_results.json","w")
 f.write(json)

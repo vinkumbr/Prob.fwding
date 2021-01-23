@@ -11,17 +11,16 @@ theta_lambda = data["theta_lambda"]
 theta_lambda_random = data["theta_lambda_random"]
 theta_lambda_251 = data["theta_lambda_251"]
 
-bool_IOC = [1-e**(-l*math.pi) for l in lbda]
-
 fig,ax = plt.subplots(1,1)
-fig.suptitle('For an RGG in a 101 by 101 grid with connection radius =1.')
-ax.plot(lbda,theta_lambda,"o",label='on 101 by 101 area')
+fig.set_size_inches(5, 2.3)
+#fig.suptitle(r'For an RGG in a $251 \times 251$ area with connection radius $r=1$.')
+#ax.plot(lbda,theta_lambda,"o",label='on 101 by 101 area')
 #ax.plot(lbda,theta_lambda,"o",label='fixed number of nodes')
 #ax.plot(lbda,theta_lambda_random,label='random number of nodes')
-ax.plot(lbda,bool_IOC,"+",label='BM-IOC')
-ax.plot(lbda,theta_lambda_251,label='on 251 by 251 area')
-ax.set_title('Percolation probability (\theta(lambda))')
-plt.xlabel('Intensity (\lambda)')
+ax.plot(lbda,theta_lambda_251,label='Averaged over 100 realizations \n of $RGG(\lambda,1)$ generated on a \n 251 by 251 area')
+ax.set_title(r'Percolation probability ($\theta(\lambda)$)')
+plt.xlabel(r'Intensity ($\lambda$)')
+plt.legend(prop={'size': 10},loc='lower right')
+plt.tight_layout()
 
-plt.legend()
 plt.show()
