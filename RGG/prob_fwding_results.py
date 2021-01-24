@@ -62,7 +62,7 @@ theta_lbda_kndelta_square = [i**2 for i in theta_lbda_kndelta]
 
 #tau_kndelta_ergodic = [(k+i)*lbda_pkndelta[i]*theta_lbda_kndelta_square[i] for i in range(len(lbda_pkndelta))]
 
-p = np.arange(0.3,0.5,0.0000001)
+p = np.arange(0.3,0.65,0.0000001)
 lbda_p = lbda*p
 f = interp1d(lamb,theta_lambda_251)
 theta_lbda_p = f(lbda_p)
@@ -72,14 +72,16 @@ pkndelta_ergodic = np.zeros(k+1)
 n=k
 while n<=40:
 	minp_index = 0
-	prob = lbda*(1-binom.cdf(k,n,theta_lbda_p**2))
+	prob = lbda*(binom.cdf(k-1,n,theta_lbda_p**2))
 	try:
-		minp_index = min(np.where(prob>(1-delta))[0])
+		minp_index = min(np.where(prob<=delta)[0])
 	except:
 		minp_index = -1
-	pkndelta_ergodic[index] = p[minp_index] 
+	pkndelta_ergodic[index] = p[minp_index]
+	#print(minp_index) 
 	index = index+1
 	n=n+1
+print(pkndelta_ergodic)
 prob_from_simu = np.array(pkndelta_simu)
 thetaplus_pfs = f(lbda*prob_from_simu)
 tau_kndelta_pfs = lbda*prob_from_simu*thetaplus_pfs**2*np.arange(k,k+len(prob_from_simu))
