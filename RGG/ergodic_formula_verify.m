@@ -17,8 +17,10 @@ n=k;
 index=1;
 while n<=40
 minp_index = 0;
-prob = lbda*binocdf(k-1,n,theta_lbda_p.*theta_lbda_p,'upper');
-minp_index = min(find(prob>=(1-delta)));
+%prob = lbda*binocdf(k-1,n,theta_lbda_p.*theta_lbda_p,'upper');
+%minp_index = min(find(prob>=(1-delta)));
+prob = lbda*binocdf(k-1,n,theta_lbda_p.*theta_lbda_p);
+minp_index = min(find(prob<=delta));
 pkndelta_ergodic(index)=p(minp_index);
 index=index+1;
 n=n+1;

@@ -4,6 +4,16 @@ import scipy.special as sp
 from scipy.stats import binom
 from scipy.interpolate import interp1d
 
+def binomial(n, k):
+    if not 0 <= k <= n:
+        return 0
+    b = 1
+    for t in range(min(k, n-k)):
+        b *= n
+        b //= t+1
+        n -= 1
+    return b
+
 # From simulations
 k=20
 delta=0.1
@@ -66,15 +76,21 @@ p = np.arange(0.3,0.65,0.0000001)
 lbda_p = lbda*p
 f = interp1d(lamb,theta_lambda_251)
 theta_lbda_p = f(lbda_p)
+theta_lbda_p_square = theta_lbda_p*theta_lbda_p
 theta_plus = theta_lbda_p 
 index = 0
 pkndelta_ergodic = np.zeros(k+1)
 n=k
 while n<=40:
 	minp_index = 0
+	prob_cdf = np.zeros(len(p))
+	prob_sum = np.zeros(len(p))
+	for j in range(k):
+		prob_sum = binomial(n,j)*theta_lbda_p_square**j*(1-theta_lbda_p_square)**(n-j)
+		prob_cdf = prob_cdf+prob_sum
 	prob = lbda*(binom.cdf(k-1,n,theta_lbda_p**2))
 	try:
-		minp_index = min(np.where(prob<=delta)[0])
+		minp_index = min(np.where(prob_cdf<=delta)[0])
 	except:
 		minp_index = -1
 	pkndelta_ergodic[index] = p[minp_index]
