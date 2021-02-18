@@ -120,8 +120,6 @@ while p>stop:
 		receivers={}
 		unif_mat=[random() for r in range(nodes)]
 		b=np.zeros(nodes)
-		if rank == 0:
-			#print(i)
 		for r in range(1,nodes):
 			b[r]=(unif_mat[r]<p)
 		b[0]=1 # // takes the floor value
