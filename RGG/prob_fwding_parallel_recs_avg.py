@@ -84,9 +84,9 @@ def convert(s):
 k=20
 q=0
 n=20
-start=0.65
+start=0.5
 stop=0.4
-step=0.02
+step=0.01
 delta=0.1
 
 p=start
@@ -108,7 +108,7 @@ while p>stop:
 			newPlace=[int(e) for e in s ]
 			M.append(newPlace)
 	succ_recs = np.zeros(10)
-	print(M[0])
+	#print(M[0])
 	nodes=len(M)
 
 	R_succ=np.zeros(1)
@@ -120,6 +120,8 @@ while p>stop:
 		receivers={}
 		unif_mat=[random() for r in range(nodes)]
 		b=np.zeros(nodes)
+		if rank == 0:
+			#print(i)
 		for r in range(1,nodes):
 			b[r]=(unif_mat[r]<p)
 		b[0]=1 # // takes the floor value
