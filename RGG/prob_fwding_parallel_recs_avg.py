@@ -81,77 +81,77 @@ def convert(s):
     # separating words by str1 
     return(str1.join(s)) 
 
-start=0.348
-stop=0.1
-step=0.0002
-delta=0.1
 k=20
-for r in range(10):
-	if rank==0:
-		M = []
-		with open('./AdjMats/RGG4.5_average/RGG%d_101_int_4.5.txt'%(r),'r') as f:
-			for line in f:
-				newPlace=[]
-				currentPlace = line[1:-2]
-				r=convert(currentPlace)
-				s=r.split(', ')
-				newPlace=[int(e) for e in s ]
-				M.append(newPlace)
-		succ_recs = np.zeros(10)
-		#print(M)
-	else:
-		M=None
+q=0
+n=20
+start=0.65
+stop=0.4
+step=0.02
+delta=0.1
 
-	M=comm.bcast(M,root=0)
+p=start
+
+if rank==0:
+	print(n)
+iter=size
+recs=[]
+#print(rank)
+while p>stop:
+	RGGid = rank%10
+	M = []
+	with open('./AdjMats/RGG4.5_average/RGG%d_101_int_4.5.txt'%(RGGid),'r') as f:
+		for line in f:
+			newPlace=[]
+			currentPlace = line[1:-2]
+			r=convert(currentPlace)
+			s=r.split(', ')
+			newPlace=[int(e) for e in s ]
+			M.append(newPlace)
+	succ_recs = np.zeros(10)
+	print(M[0])
 	nodes=len(M)
-	q=0
-	p=start
 
-	n=29
+	R_succ=np.zeros(1)
+	frac_R_succ = np.zeros(1)
+	Efrac_R_succ=np.zeros(1)
+	R=np.zeros(nodes)
+	for i in range(n):
+		transmitters={}
+		receivers={}
+		unif_mat=[random() for r in range(nodes)]
+		b=np.zeros(nodes)
+		for r in range(1,nodes):
+			b[r]=(unif_mat[r]<p)
+		b[0]=1 # // takes the floor value
+		[transmitters,receivers]=connected_components(nodes,M,b)
+		#print(list(transmitters[0]))
+		R[list(receivers[0])]+=1
+		R[list(transmitters[0])]+=1
+	R_succ[0]=len(R[R>=k])
+	frac_R_succ = R_succ[0]/nodes
+	comm.Barrier()
+	comm.Reduce(frac_R_succ, Efrac_R_succ, op=MPI.SUM, root=0)
+
 	if rank==0:
-		print(n)
-	iter=size
-	recs=[]
-	#print(rank)
-	while p>stop:
-		R_succ=np.zeros(1)
-		R=np.zeros(nodes)
-		for i in range(n):
-			transmitters={}
-			receivers={}
-			unif_mat=[random() for r in range(nodes)]
-			b=np.zeros(nodes)
-			for r in range(1,nodes):
-				b[r]=(unif_mat[r]<p)
-			b[0]=1 # // takes the floor value
-			[transmitters,receivers]=connected_components(nodes,M,b)
-			#print(list(transmitters[0]))
-			R[list(receivers[0])]+=1
-			R[list(transmitters[0])]+=1
-		R_succ[0]=len(R[R>=k])
-		ER_succ=np.zeros(1)
-		comm.Barrier()
-		comm.Reduce(R_succ, ER_succ, op=MPI.SUM, root=0)
-		if rank==0:
-			succ_rec[r] = ER_succ[0]/(iter*nodes))
-			start_time = datetime.datetime.now()
-			print(p)
-			print(start_time)
-			recs.append(ER_succ[0]/(iter*nodes))
-			print(recs[q])
-			if recs[q]<(1-delta):
-				break
-		p=p-step
-		q=q+1
-	if rank==0:
-		f=open('pkndelta.txt','a')
-		f.write(str(k)+'\n')
-		f.write(str(n)+'\n')
-		f.write(str(p+step)+'\n')
-		f.write(str(datetime.datetime.now())+'\n')
-		print(k)
-		print(n)
-		print(p+step)
-		print(datetime.datetime.now())
-		f.close()
+		start_time = datetime.datetime.now()
+		print(p)
+		print(start_time)
+		recs.append(Efrac_R_succ[0]/iter)
+		print(recs[q])
+		if recs[q]<(1-delta):
+			break
+	p=p-step
+	q=q+1
+
+if rank==0:
+	f=open('pkndelta_avg_realizations.txt','a')
+	f.write(str(k)+'\n')
+	f.write(str(n)+'\n')
+	f.write(str(p+step)+'\n')
+	f.write(str(datetime.datetime.now())+'\n')
+	print(k)
+	print(n)
+	print(p+step)
+	print(datetime.datetime.now())
+	f.close()
 
