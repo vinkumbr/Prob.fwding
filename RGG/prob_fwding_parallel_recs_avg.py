@@ -1,4 +1,7 @@
-# Inspired from https://breakingcode.wordpress.com/2013/04/08/finding-connected-components-in-a-graph/
+# This code averages over the realizations of the underlying RGG as well.
+# Use "mpirun -n 200 python prob_fwding_parallel_recs_avg.py" to run this code.
+# This code takes in the adjacency matrices present in the ./AdjMats/RGG4.5_average folder. The num_graphs parameter is the number of realizations over which it is averaged. Verify the number of realizations that are present in the folder before changing this parameter. If num_graphs = 10 and ranks is 200, then 20 iterations of probabilistic forwarding is performed on each of the 10 graphs. 
+# You might have to use "ulimit -n <some large number-5000>" to have more ranks (>200) in the terminal.
 
 from __future__ import division
 from mpi4py import MPI
@@ -83,11 +86,12 @@ def convert(s):
 
 k=20
 q=0
-n=20
-start=0.5
-stop=0.4
-step=0.01
+n=25
+start=0.373
+stop=0.3
+step=0.001
 delta=0.1
+num_graphs=10
 
 p=start
 
@@ -97,7 +101,7 @@ iter=size
 recs=[]
 #print(rank)
 while p>stop:
-	RGGid = rank%10
+	RGGid = rank%num_graphs
 	M = []
 	with open('./AdjMats/RGG4.5_average/RGG%d_101_int_4.5.txt'%(RGGid),'r') as f:
 		for line in f:
@@ -154,4 +158,6 @@ if rank==0:
 	print(p+step)
 	print(datetime.datetime.now())
 	f.close()
+
+
 

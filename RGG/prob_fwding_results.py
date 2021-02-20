@@ -32,6 +32,10 @@ if lbda == 4.5:
 	pkndelta_simu=[0.519,0.448,0.417,0.395,0.386,0.377,0.369,0.365,0.3605,0.357,0.355,0.35280,0.34980,0.34840,0.34720,0.3457,0.3438,0.34300,0.34210,0.3409,0.3401]
 	tau_kndelta_simu=[473877.0, 421523.66, 404229.58, 385503.37, 389178.52, 384351.29, 383509.59, 387956.2, 383379.07, 390788.11, 394998.01, 397147.49, 393409.78, 402471.6, 404411.08, 409427.06, 409307.46, 409587.61, 422560.22, 419275.77, 416047.03]
 
+#Results of running prob_fwding_parallel_recs_avg.py on RGG with M given by ./AdjMats/RGG4.5_average/*.txt with m=101, lambda=4.5 and radius=1. 10 realizations of RGG and 20 prob forwarding on each
+pkndelta_avg = [0.498,0.434,0.408,0.395,0.382]
+
+
 #Results of running prob_fwding_parallel.py on a RGG with M given by RGG_M.txt with m=101, lambda=4.54 and radius=1 
 #if lbda == 4.54:
 #	pkndelta_simu=[0.59,0.504,0.452,0.429,0.406,0.395,0.385,0.377,0.37,0.365,0.361,0.358,0.355,0.353,0.35,0.348,0.3464,0.3457,0.3439,0.342,0.341]
