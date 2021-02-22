@@ -1,7 +1,4 @@
-# This code averages over the realizations of the underlying RGG as well.
-# Use "mpirun -n 200 python prob_fwding_parallel_recs_avg.py" to run this code.
-# This code takes in the adjacency matrices present in the ./AdjMats/RGG4.5_average folder. The num_graphs parameter is the number of realizations over which it is averaged. Verify the number of realizations that are present in the folder before changing this parameter. If num_graphs = 10 and ranks is 200, then 20 iterations of probabilistic forwarding is performed on each of the 10 graphs. 
-# You might have to use "ulimit -n <some large number-5000>" to have more ranks (>200) in the terminal.
+# Inspired from https://breakingcode.wordpress.com/2013/04/08/finding-connected-components-in-a-graph/
 
 from __future__ import division
 from mpi4py import MPI
@@ -10,7 +7,7 @@ import math
 from array import *
 from random import *
 import sys
-#np.set_printoptions(threshold=np.nan)
+
 
 import datetime
 
@@ -84,41 +81,33 @@ def convert(s):
     # separating words by str1 
     return(str1.join(s)) 
 
-k=20
+num_graphs = 10
+RGGid = rank%num_graphs
+M = []
+with open('./AdjMats/RGG4.5_average/RGG%d_101_int_4.5.txt'%(RGGid),'r') as f:
+	for line in f:
+		newPlace=[]
+		currentPlace = line[1:-2]
+		r=convert(currentPlace)
+		s=r.split(', ')
+		newPlace=[int(e) for e in s ]
+		M.append(newPlace)
+
+nodes=len(M)
 q=0
-n=31
-start=0.3546
-stop=0.3
-step=0.0002
-delta=0.1
-num_graphs=10
-
-p=start
-
-if rank==0:
-	print(n)
+# This is the pkndelta values obtained using the prob_fwding_parallel.py code on RGG_M.txt
+pkndelta = [0.498,0.434,0.408,0.395,0.382,0.374,0.368,0.364,0.3601,0.3572,0.3548,0.3522,0.3502,   0.3479,0.3465,0.346,0.3445,0.3437,0.3419,0.3413,0.3404]
+k=20
 iter=size
-recs=[]
-#print(rank)
-while p>stop:
-	RGGid = rank%num_graphs
-	M = []
-	with open('./AdjMats/RGG4.5_average/RGG%d_101_int_4.5.txt'%(RGGid),'r') as f:
-		for line in f:
-			newPlace=[]
-			currentPlace = line[1:-2]
-			r=convert(currentPlace)
-			s=r.split(', ')
-			newPlace=[int(e) for e in s ]
-			M.append(newPlace)
-	succ_recs = np.zeros(10)
-	#print(M[0])
-	nodes=len(M)
-
-	R_succ=np.zeros(1)
-	frac_R_succ = np.zeros(1)
-	Efrac_R_succ=np.zeros(1)
-	R=np.zeros(nodes)
+if rank==0:
+	tau_kndelta = []
+	#print(n)
+	print(iter)
+for l in range(len(pkndelta)):
+	tau = np.zeros(1)
+	n=k+l
+	p=pkndelta[l]
+	trans = np.zeros(1)
 	for i in range(n):
 		transmitters={}
 		receivers={}
@@ -128,36 +117,28 @@ while p>stop:
 			b[r]=(unif_mat[r]<p)
 		b[0]=1 # // takes the floor value
 		[transmitters,receivers]=connected_components(nodes,M,b)
-		#print(list(transmitters[0]))
-		R[list(receivers[0])]+=1
-		R[list(transmitters[0])]+=1
-	R_succ[0]=len(R[R>=k])
-	frac_R_succ = R_succ[0]/nodes
+		trans[0] = trans[0]+len(list(transmitters[0]))
 	comm.Barrier()
-	comm.Reduce(frac_R_succ, Efrac_R_succ, op=MPI.SUM, root=0)
-
+	comm.Reduce(trans, tau, op=MPI.SUM, root=0)
 	if rank==0:
 		start_time = datetime.datetime.now()
 		print(p)
+		print(n)
 		print(start_time)
-		recs.append(Efrac_R_succ[0]/iter)
-		print(recs[q])
-		if recs[q]<(1-delta):
-			break
-	p=p-step
+		tau_kndelta.append(tau[0]/(iter))
+		print(tau_kndelta[q])
 	q=q+1
-
 if rank==0:
-	f=open('pkndelta_avg_realizations.txt','a')
+	f=open('tau_kndelta_avg.txt','a')
 	f.write(str(k)+'\n')
-	f.write(str(n)+'\n')
-	f.write(str(p+step)+'\n')
+	#f.write(str(n)+'\n')
+	f.write(str(tau_kndelta)+'\n')
 	f.write(str(datetime.datetime.now())+'\n')
 	print(k)
-	print(n)
-	print(p+step)
+	print(nodes)
+	print(tau_kndelta)
+	#print(n)
+	#print(p+step)
 	print(datetime.datetime.now())
 	f.close()
-
-
 
