@@ -28,12 +28,14 @@ tau_kndelta_simu1=[470324.43, 427097.13, 415147.2, 400075.68, 386824.4, 391737.1
 tau_kndelta_simu1=[t/(101*101) for t in tau_kndelta_simu1]
 
 #Results of running prob_fwding_parallel.py on a RGG with M given by RGG_101_int_4.5.txt with m=101, lambda=4.5 and radius=1 
-if lbda == 4.5:
-	pkndelta_simu=[0.519,0.448,0.417,0.395,0.386,0.377,0.369,0.365,0.3605,0.357,0.355,0.35280,0.34980,0.34840,0.34720,0.3457,0.3438,0.34300,0.34210,0.3409,0.3401]
-	tau_kndelta_simu=[473877.0, 421523.66, 404229.58, 385503.37, 389178.52, 384351.29, 383509.59, 387956.2, 383379.07, 390788.11, 394998.01, 397147.49, 393409.78, 402471.6, 404411.08, 409427.06, 409307.46, 409587.61, 422560.22, 419275.77, 416047.03]
+#if lbda == 4.5:
+#	pkndelta_simu=[0.519,0.448,0.417,0.395,0.386,0.377,0.369,0.365,0.3605,0.357,0.355,0.35280,0.34980,0.34840,0.34720,0.3457,0.3438,0.34300,0.34210,0.3409,0.3401]
+#	tau_kndelta_simu=[473877.0, 421523.66, 404229.58, 385503.37, 389178.52, 384351.29, 383509.59, 387956.2, 383379.07, 390788.11, 394998.01, 397147.49, 393409.78, 402471.6, 404411.08, 409427.06, 409307.46, 409587.61, 422560.22, 419275.77, 416047.03]
 
 #Results of running prob_fwding_parallel_recs_avg.py on RGG with M given by ./AdjMats/RGG4.5_average/*.txt with m=101, lambda=4.5 and radius=1. 10 realizations of RGG and 20 prob forwarding on each
-pkndelta_avg = [0.498,0.434,0.408,0.395,0.382,0.374,0.368,0.364,0.3601,0.3572,0.3548,0.3522,0.3502,   0.3479,0.3465,0.346,0.3445,0.3437,0.3419,0.3413,0.3404]
+if lbda == 4.5:
+	pkndelta_simu = [0.498,0.434,0.408,0.395,0.382,0.374,0.368,0.364,0.3601,0.3572,0.3548,0.3522,0.3502,   0.3479,0.3465,0.346,0.3445,0.3437,0.3419,0.3413,0.3404]
+	tau_kndelta_simu = [454096.61, 409689.815, 395773.97, 392819.375, 387389.275, 386460.125, 389011.835, 391003.62, 392094.54, 395676.51, 402518.52, 401771.14, 406296.3, 405092.09, 404213.2, 415875.355, 419580.805, 422831.875, 420917.8, 426195.71, 430323.0]
 
 
 #Results of running prob_fwding_parallel.py on a RGG with M given by RGG_M.txt with m=101, lambda=4.54 and radius=1 
@@ -71,7 +73,7 @@ lamb = data["lambda"]
 theta_lambda = data["theta_lambda"]
 theta_lambda_251 = data["theta_lambda_251"]
 theta_lambda_random = data["theta_lambda_random"]
-theta_lbda_kndelta = [theta_lambda_251[int((round(k,2)-1)/0.01)] for k in lbda_pkndelta]
+theta_lbda_kndelta = [theta_lambda_251[int((round(m,2)-1)/0.01)] for m in lbda_pkndelta]
 theta_lbda_kndelta_square = [i**2 for i in theta_lbda_kndelta]
 
 #tau_kndelta_ergodic = [(k+i)*lbda_pkndelta[i]*theta_lbda_kndelta_square[i] for i in range(len(lbda_pkndelta))]
@@ -83,6 +85,7 @@ theta_lbda_p = f(lbda_p)
 theta_lbda_p_square = theta_lbda_p*theta_lbda_p
 theta_plus = theta_lbda_p 
 index = 0
+print(k)
 pkndelta_ergodic = np.zeros(k+1)
 n=k
 while n<=40:
