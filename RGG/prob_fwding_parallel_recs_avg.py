@@ -86,10 +86,10 @@ def convert(s):
 
 k=20
 q=0
-n=31
-start=0.3546
+n=40
+start=0.3822
 stop=0.3
-step=0.0002
+step=0.0001
 delta=0.1
 num_graphs=10
 
@@ -103,7 +103,7 @@ recs=[]
 while p>stop:
 	RGGid = rank%num_graphs
 	M = []
-	with open('./AdjMats/RGG4.5_average/RGG%d_101_int_4.5.txt'%(RGGid),'r') as f:
+	with open('./AdjMats/RGG4.0_average/RGG_101_int_4.0_id_%d.txt'%(RGGid),'r') as f:
 		for line in f:
 			newPlace=[]
 			currentPlace = line[1:-2]

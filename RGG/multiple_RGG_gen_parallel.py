@@ -68,15 +68,21 @@ def createRGG(z,radius):
 				M[j].append(i)
 	return M
 
-def generatevalidRGG(lbda,m,radius):
-	Phi=createPPP(lbda,m)
-	#with open('./AdjMats/test_formula/RGGlocs_%d_int_%s.txt'%(m,lbda), 'w') as f:
-	#	for item in Phi:
-	#		f.write("%s\n" % item)
-	M=createRGG(Phi,radius)
-	with open('./AdjMats/test_formula/RGG_%d_int_%s_id_%d.txt'%(m,lbda,rank), 'w') as f:
-		for item in M:
-			f.write("%s\n" % item)
+def generatevalidRGG(lbda,m,radius,valid):
+	if valid ==0:
+		Phi=createPPP(lbda,m)
+		#with open('./AdjMats/test_formula/RGGlocs_%d_int_%s.txt'%(m,lbda), 'w') as f:
+		#	for item in Phi:
+		#		f.write("%s\n" % item)
+		M=createRGG(Phi,radius)
+		if isconnected(M):
+			with open('./AdjMats/test_formula/RGG_%d_int_%s_id_%d.txt'%(m,lbda,rank), 'w') as f:
+				for item in M:
+					f.write("%s\n" % item)
+			valid=1
+		else:
+			generatevalidRGG(lbda,m,radius,0)
+		
 
 if rank ==0:
 	print('Input lambda, size of grid (m) and the radius ')
@@ -92,6 +98,6 @@ lbda = comm.bcast(lbda,root=0)
 m = comm.bcast(m,root=0)
 radius = comm.bcast(radius,root=0)
 
-generatevalidRGG(lbda,m,radius)
+generatevalidRGG(lbda,m,radius,0)
 
 
