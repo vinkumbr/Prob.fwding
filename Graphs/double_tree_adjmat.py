@@ -17,10 +17,11 @@ def adjmatdoubletree(height):
 	return a
 
 def reduce_adj_mat(a):
-	j=[]
+	M=[[] for i in range(len(a))]
 	for i in range(len(a)):
-		j.append(min(np.where(a[i][:])))
-	return j
+		for r in min(np.where(a[i][:])):
+			M[i].append(r)
+	return M
 
 height = 12
 a=adjmatdoubletree(height)
