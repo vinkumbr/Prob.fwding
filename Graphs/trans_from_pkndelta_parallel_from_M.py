@@ -84,7 +84,7 @@ def convert(s):
 
 if rank==0:
 	M = []
-	with open('./M_doubletree_12.txt','r') as f:
+	with open('./M_doubletree_9.txt','r') as f:
 		for line in f:
 			newPlace=[]
 			currentPlace = line[1:-2]
@@ -100,8 +100,9 @@ M=comm.bcast(M,root=0)
 nodes=len(M)
 q=0
 # This is the pkndelta values obtained using the prob_fwding_parallel.py code on RGG_M.txt
-pkndelta = [0.987,0.97,0.9598,0.9493,0.9406,0.9329,0.9256,0.92,0.9135,0.9087,0.9039,0.8999,0.8955,0.8917,0.8878,0.8843,0.8813,0.8781,0.8755,0.8736,0.8692]
-k=20
+pkndelta = [0.993,0.945,0.922,0.903,0.89,0.877,0.868,0.859,0.851,0.844,0.838]
+pkt_offset = 10
+k=100
 iter=size
 if rank==0:
 	tau_kndelta = []
@@ -109,7 +110,7 @@ if rank==0:
 	print(iter)
 for l in range(len(pkndelta)):
 	tau = np.zeros(1)
-	n=k+l
+	n=k+l*pkt_offset
 	p=pkndelta[l]
 	trans = np.zeros(1)
 	for i in range(n):
@@ -133,7 +134,7 @@ for l in range(len(pkndelta)):
 		print(tau_kndelta[q])
 	q=q+1
 if rank==0:
-	f=open('tau_kndelta_doubletree_12.txt','a')
+	f=open('tau_kndelta_doubletree_9.txt','a')
 	f.write(str(k)+'\n')
 	#f.write(str(n)+'\n')
 	f.write(str(tau_kndelta)+'\n')

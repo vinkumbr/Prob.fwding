@@ -23,7 +23,8 @@ def reduce_adj_mat(a):
 			M[i].append(r)
 	return M
 
-height = 12
+#For a doubletree (two binary trees joined at the leaves) of height (root of one of the trees is the source and is at height 0; height is the level at which there are maximum nodes) given by the variable height.
+height = input('Enter the height')
 a=adjmatdoubletree(height)
 M=reduce_adj_mat(a)
 with open('./M_doubletree_%d.txt'%(height), 'w') as f:
