@@ -2,7 +2,6 @@
 import matplotlib.pyplot as plt
 import json
 
-n = range(20,41)
 m=101
 
 #import from simu_results.json file
@@ -13,6 +12,12 @@ height = data["height"]
 k = data["k"]
 pkndelta = data["pkndelta"]
 tau_kndelta = data["tau_kndelta"]
+print(k)
+
+if int(k) == 20:
+	n = range(20,41)
+elif int(k) == 100:
+	n = range(100,201,10)
 
 fig1,ax1 = plt.subplots(1,1)
 fig1.set_size_inches(5, 2.5)
