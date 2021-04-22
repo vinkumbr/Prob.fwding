@@ -17,17 +17,16 @@ def binomial(n, k):
 # From simulations
 k=20
 delta=0.1
-m= 31
+
 #n=20:1:40
 print('Input the size of the grid ')# and size m (101 or 121)')
-lbda = float(input('m '))
-#Results of running prob_fwding_parallel.py on a grid with m=31 and delta =0.1
-pkndelta_simu = [0.82,0.75,0.72,0.7,0.686,0.677,0.669,0.665,0.661,0.6552,0.6512,0.6462,0.6444,0.6402,0.638,0.636,0.6331,0.6303,0.6288,0.6277,0.6252] 
-tau_kndelta_simu = [15717.37, 14851.3, 14610.65, 14500.53, 14394.52, 14505.66, 14570.42, 14844.95, 14955.21, 14997.08, 14955.73, 15028.94, 15176.59, 15214.34, 15279.74, 15671.87, 15693.4, 15468.87, 15812.76, 16032.87, 15925.76]
+m = float(input('m '))
+if m==31:
+#Results of running prob_fwding_parallel.py on a grid with m=31 and delta = 0.1
+	pkndelta_simu = [0.82,0.75,0.72,0.7,0.686,0.677,0.669,0.665,0.661,0.6552,0.6512,0.6462,0.6444,0.6402,0.638,0.636,0.6331,0.6303,0.6288,0.6277,0.6252] 
+	tau_kndelta_simu = [15717.37, 14851.3, 14610.65, 14500.53, 14394.52, 14505.66, 14570.42, 14844.95, 14955.21, 14997.08, 14955.73, 15028.94, 15176.59, 15214.34, 15279.74, 15671.87, 15693.4, 15468.87, 15812.76, 16032.87, 15925.76]
 
-#Ergodic result
-lbda_pkndelta = [lbda*p for p in pkndelta_simu]
-
+tau_kndelta_simu = [t/(m*m) for t in tau_kndelta_simu]
 #import from json file
 with open("theta_thetaplus.json") as f:
 	data = json.load(f)
@@ -38,9 +37,8 @@ thetap = data["thetap"]
 thetaplus = data["thetaplus"]
 
 p_fine = np.arange(0.45,1,0.000001)
-p_sq = p*p
-thetap_sq = thetap**2
-thetaplus_sq = thetap_sq/p_sq
+thetap_sq = [num**2 for num in thetap]
+thetaplus_sq = [nump**2 for nump in thetaplus]
 func = interp1d(p,thetaplus_sq)
 thetaplus_sq_fine = func(p_fine)
 
@@ -69,12 +67,12 @@ print(pkndelta_ergodic)
 #thetaplus_pfs = f(lbda*prob_from_simu)
 #tau_kndelta_pfs = lbda*prob_from_simu*thetaplus_pfs**2*np.arange(k,k+len(prob_from_simu))
 thetaplus_pkndelta = func(pkndelta_ergodic)
-tau_kndelta_ergodic = thetaplus_pkndelta**2*np.arange(k,k+len(pkndelta_ergodic))/pkndelta_ergodic
+tau_kndelta_ergodic = thetaplus_pkndelta**2*np.arange(k,k+len(pkndelta_ergodic))*pkndelta_ergodic
 
 #print(pkndelta_ergodic)
 #print(tau_kndelta_ergodic)
 
-dict={"lbda":lbda,"pkndelta_simu":pkndelta_simu,"pkndelta_ergodic":list(pkndelta_ergodic),"tau_kndelta_simu":tau_kndelta_simu,"tau_kndelta_ergodic":list(tau_kndelta_ergodic)}
+dict={"m":m,"pkndelta_simu":pkndelta_simu,"pkndelta_ergodic":list(pkndelta_ergodic),"tau_kndelta_simu":tau_kndelta_simu,"tau_kndelta_ergodic":list(tau_kndelta_ergodic)}
 json = json.dumps(dict)
 f= open("simu_results.json","w")
 f.write(json)
