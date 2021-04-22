@@ -69,11 +69,12 @@ def connected_components(nodes,M,b):
 	# Return the list of groups.
 	return transmitters,receivers
 
+
 if rank==0:
 	m=31 #keep this to be odd 
 	nodes= m*m
-	lat_type = input("Enter the type of grid- square(s) or triangular(t)")
-	if lat_type == 's'
+	lat_type='t'
+	if lat_type == 's':
 		M=np.zeros((nodes,4),dtype=np.int)   #stores the reduced adjacency matrix with the M(x,0) the east neighbor; M(x,1) the north neighbor; M(x,2) the west neighbor of x. Entry=-1 when there is no neighbor
 		for i in range(nodes):
 			if i%m!=m-1:
@@ -122,7 +123,7 @@ if rank==0:
 				M[i][3]=i-m
 			else:
 				M[i][3]=-1
-		print (M)                 # Note: bottom left vertex has index 0
+		#print (M)                 # Note: bottom left vertex has index 0
 else:
 	M=None
 
