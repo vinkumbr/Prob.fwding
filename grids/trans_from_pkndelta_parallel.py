@@ -7,10 +7,10 @@ import math
 from array import *
 from random import *
 import sys
-#np.set_printoptions(threshold=np.nan)
+
 
 import datetime
-start_time = datetime.datetime.now()
+
 #print(start_time) 
 
 comm = MPI.COMM_WORLD
@@ -18,7 +18,6 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 
 #print(rank)
-
 # The function to look for connected components.
 def connected_components(nodes,M,b):
 	# List of connected components found. The order is random.
@@ -42,7 +41,7 @@ def connected_components(nodes,M,b):
 		# Fetch the neighbors.
 		neighbors=[]
 		recd=[]
-		for i in range(len(M[0])):
+		for i in range(len(M[n])):
 			if (M[n][i]!=-1) and (b[M[n][i]]==1):
 				neighbors.append(M[n][i])
 			if (M[n][i]!=-1) and (b[M[n][i]]==0):
@@ -68,6 +67,7 @@ def connected_components(nodes,M,b):
 	receivers.append(rgroup)
 	# Return the list of groups.
 	return transmitters,receivers
+
 
 if rank==0:
 	m=31 #keep this to be odd 
@@ -96,22 +96,21 @@ else:
 
 M=comm.bcast(M,root=0)
 nodes=len(M)
-q=0
-start=0.6277
-stop=0.5
-step=0.0001
-p=start
-k=20
-delta=0.1
-n=40
-if rank==0:
-	print(n)
-iter=size
-recs=[]
 
-while p>stop:
-	R_succ=np.zeros(1)
-	R=np.zeros(nodes)
+q=0
+# This is the pkndelta values obtained using the prob_fwding_parallel.py code on RGG_M.txt
+pkndelta = [0.82,0.75,0.72,0.7,0.686,0.677,0.669,0.665,0.661,0.6552,0.6512,0.6462,0.6444,0.6402,0.638,0.636,0.6331,0.6303,0.6288,0.6277,0.6252] 
+k=20
+iter=size
+if rank==0:
+	tau_kndelta = []
+	#print(n)
+	print(iter)
+for l in range(len(pkndelta)):
+	tau = np.zeros(1)
+	n=k+l
+	p=pkndelta[l]
+	trans = np.zeros(1)
 	for i in range(n):
 		transmitters={}
 		receivers={}
@@ -121,34 +120,28 @@ while p>stop:
 			b[r]=(unif_mat[r]<p)
 		b[0]=1 # // takes the floor value
 		[transmitters,receivers]=connected_components(nodes,M,b)
-		#print(list(transmitters[0]))
-		R[list(receivers[0])]+=1
-		R[list(transmitters[0])]+=1
-	R_succ[0]=len(R[R>=k])
-	ER_succ=np.zeros(1)
+		trans[0] = trans[0]+len(list(transmitters[0]))
 	comm.Barrier()
-	comm.Reduce(R_succ, ER_succ, op=MPI.SUM, root=0)
+	comm.Reduce(trans, tau, op=MPI.SUM, root=0)
 	if rank==0:
 		start_time = datetime.datetime.now()
 		print(p)
+		print(n)
 		print(start_time)
-		recs.append(ER_succ[0]/(iter*nodes))
-		print(recs[q])
-		if recs[q]<(1-delta):
-			break
-	p=p-step
+		tau_kndelta.append(tau[0]/(iter))
+		print(tau_kndelta[q])
 	q=q+1
 if rank==0:
-	f=open('pkndelta.txt','a')
+	f=open('tau_kndelta.txt','a')
 	f.write(str(k)+'\n')
-	f.write(str(n)+'\n')
-	f.write(str(p+step)+'\n')
+	#f.write(str(n)+'\n')
+	f.write(str(tau_kndelta)+'\n')
 	f.write(str(datetime.datetime.now())+'\n')
 	print(k)
-	print(n)
-	print(p+step)
+	print(nodes)
+	print(tau_kndelta)
+	#print(n)
+	#print(p+step)
 	print(datetime.datetime.now())
 	f.close()
-
-
 
