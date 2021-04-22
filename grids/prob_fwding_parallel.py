@@ -72,38 +72,70 @@ def connected_components(nodes,M,b):
 if rank==0:
 	m=31 #keep this to be odd 
 	nodes= m*m
-	M=np.zeros((nodes,4),dtype=np.int)   #stores the reduced adjacency matrix with the M(x,0) the east neighbor; M(x,1) the north neighbor; M(x,2) the west neighbor of x. Entry=-1 when there is no neighbor
-	for i in range(nodes):
-		if i%m!=m-1:
-			M[i][0]=i+1
-		else:
-			M[i][0]=-1
-		if i<=m*m-m-1:
-			M[i][1]=i+m
-		else:
-			M[i][1]=-1
-		if i%m!=0:
-			M[i][2]=i-1
-		else:
-			M[i][2]=-1
-		if i>=m:
-			M[i][3]=i-m
-		else:
-			M[i][3]=-1
-	#print (M)                 # Note: bottom left vertex has index 0
+	lat_type = input("Enter the type of grid- square(s) or triangular(t)")
+	if lat_type == 's'
+		M=np.zeros((nodes,4),dtype=np.int)   #stores the reduced adjacency matrix with the M(x,0) the east neighbor; M(x,1) the north neighbor; M(x,2) the west neighbor of x. Entry=-1 when there is no neighbor
+		for i in range(nodes):
+			if i%m!=m-1:
+				M[i][0]=i+1
+			else:
+				M[i][0]=-1
+			if i<=m*m-m-1:
+				M[i][1]=i+m
+			else:
+				M[i][1]=-1
+			if i%m!=0:
+				M[i][2]=i-1
+			else:
+				M[i][2]=-1
+			if i>=m:
+				M[i][3]=i-m
+			else:
+				M[i][3]=-1
+		#print (M)                 # Note: bottom left vertex has index 0
+	elif lat_type == 't':
+		M=np.zeros((nodes,6),dtype=np.int)   #stores the reduced adjacency matrix with the M(x,0) the east neighbor; M(x,1) the north neighbor; M(x,2) the west neighbor of x. Entry=-1 when there is no neighbor
+		for i in range(nodes):
+			if i%m!=m-1:
+				M[i][0]=i+1
+				if i<=m*m-m-1:
+					M[i][4]=i+m+1
+				else:
+					M[i][4]=-1
+			else:
+				M[i][0]=-1
+				M[i][4]=-1
+			if i<=m*m-m-1:
+				M[i][1]=i+m
+			else:
+				M[i][1]=-1
+			if i%m!=0:
+				M[i][2]=i-1
+				if i>=m:
+					M[i][5]=i-m-1
+				else:
+					M[i][5]=-1
+			else:
+				M[i][2]=-1
+				M[i][5]=-1
+			if i>=m:
+				M[i][3]=i-m
+			else:
+				M[i][3]=-1
+		print (M)                 # Note: bottom left vertex has index 0
 else:
 	M=None
 
 M=comm.bcast(M,root=0)
 nodes=len(M)
 q=0
-start=0.6277
+start=0.89
 stop=0.5
-step=0.0001
+step=0.01
 p=start
 k=20
 delta=0.1
-n=40
+n=20
 if rank==0:
 	print(n)
 iter=size

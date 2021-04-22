@@ -26,7 +26,14 @@ if m==31:
 	pkndelta_simu = [0.82,0.75,0.72,0.7,0.686,0.677,0.669,0.665,0.661,0.6552,0.6512,0.6462,0.6444,0.6402,0.638,0.636,0.6331,0.6303,0.6288,0.6277,0.6252] 
 	tau_kndelta_simu = [15717.37, 14851.3, 14610.65, 14500.53, 14394.52, 14505.66, 14570.42, 14844.95, 14955.21, 14997.08, 14955.73, 15028.94, 15176.59, 15214.34, 15279.74, 15671.87, 15693.4, 15468.87, 15812.76, 16032.87, 15925.76]
 
+#Results of running prob_fwding_parallel.py on a grid with m=31 and delta = 0.05
+	pkndelta_simu1 = [0.84,0.77,0.74,0.715,0.7,0.69,0.681,0.6745,0.669,0.664,0.66,0.657,0.653,0.6504,0.6462,0.6442,0.641,0.6389,0.6366,0.6354,0.6323]
+	tau_kndelta_simu1 = [16091.93, 15363.67, 15243.82, 15118.68, 15129.23, 15340.25, 15316.56, 15396.07, 15688.35, 15804.2, 15892.32, 16171.32, 16344.16, 16496.62, 16466.7, 16664.77, 16756.28, 16882.41, 16911.89, 17343.1, 17408.83]
+
+
+
 tau_kndelta_simu = [t/(m*m) for t in tau_kndelta_simu]
+tau_kndelta_simu1 = [t/(m*m) for t in tau_kndelta_simu1]
 #import from json file
 with open("theta_thetaplus.json") as f:
 	data = json.load(f)
@@ -72,7 +79,7 @@ tau_kndelta_ergodic = thetaplus_pkndelta**2*np.arange(k,k+len(pkndelta_ergodic))
 #print(pkndelta_ergodic)
 #print(tau_kndelta_ergodic)
 
-dict={"m":m,"pkndelta_simu":pkndelta_simu,"pkndelta_ergodic":list(pkndelta_ergodic),"tau_kndelta_simu":tau_kndelta_simu,"tau_kndelta_ergodic":list(tau_kndelta_ergodic)}
+dict={"m":m,"pkndelta_simu":pkndelta_simu,"pkndelta_simu1":pkndelta_simu1,"pkndelta_ergodic":list(pkndelta_ergodic),"tau_kndelta_simu":tau_kndelta_simu,"tau_kndelta_simu1":tau_kndelta_simu1,"tau_kndelta_ergodic":list(tau_kndelta_ergodic)}
 json = json.dumps(dict)
 f= open("simu_results.json","w")
 f.write(json)
