@@ -72,25 +72,57 @@ def connected_components(nodes,M,b):
 if rank==0:
 	m=31 #keep this to be odd 
 	nodes= m*m
-	M=np.zeros((nodes,4),dtype=np.int)   #stores the reduced adjacency matrix with the M(x,0) the east neighbor; M(x,1) the north neighbor; M(x,2) the west neighbor of x. Entry=-1 when there is no neighbor
-	for i in range(nodes):
-		if i%m!=m-1:
-			M[i][0]=i+1
-		else:
-			M[i][0]=-1
-		if i<=m*m-m-1:
-			M[i][1]=i+m
-		else:
-			M[i][1]=-1
-		if i%m!=0:
-			M[i][2]=i-1
-		else:
-			M[i][2]=-1
-		if i>=m:
-			M[i][3]=i-m
-		else:
-			M[i][3]=-1
-	#print (M)                 # Note: bottom left vertex has index 0
+	lat_type='t'
+	if lat_type == 's':
+		M=np.zeros((nodes,4),dtype=np.int)   #stores the reduced adjacency matrix with the M(x,0) the east neighbor; M(x,1) the north neighbor; M(x,2) the west neighbor of x. Entry=-1 when there is no neighbor
+		for i in range(nodes):
+			if i%m!=m-1:
+				M[i][0]=i+1
+			else:
+				M[i][0]=-1
+			if i<=m*m-m-1:
+				M[i][1]=i+m
+			else:
+				M[i][1]=-1
+			if i%m!=0:
+				M[i][2]=i-1
+			else:
+				M[i][2]=-1
+			if i>=m:
+				M[i][3]=i-m
+			else:
+				M[i][3]=-1
+		#print (M)                 # Note: bottom left vertex has index 0
+	elif lat_type == 't':
+		M=np.zeros((nodes,6),dtype=np.int)   #stores the reduced adjacency matrix with the M(x,0) the east neighbor; M(x,1) the north neighbor; M(x,2) the west neighbor of x. Entry=-1 when there is no neighbor
+		for i in range(nodes):
+			if i%m!=m-1:
+				M[i][0]=i+1
+				if i<=m*m-m-1:
+					M[i][4]=i+m+1
+				else:
+					M[i][4]=-1
+			else:
+				M[i][0]=-1
+				M[i][4]=-1
+			if i<=m*m-m-1:
+				M[i][1]=i+m
+			else:
+				M[i][1]=-1
+			if i%m!=0:
+				M[i][2]=i-1
+				if i>=m:
+					M[i][5]=i-m-1
+				else:
+					M[i][5]=-1
+			else:
+				M[i][2]=-1
+				M[i][5]=-1
+			if i>=m:
+				M[i][3]=i-m
+			else:
+				M[i][3]=-1
+		#print (M)                 # Note: bottom left vertex has index 0
 else:
 	M=None
 
@@ -99,7 +131,7 @@ nodes=len(M)
 
 q=0
 # This is the pkndelta values obtained using the prob_fwding_parallel.py code on RGG_M.txt
-pkndelta = [0.82,0.75,0.72,0.7,0.686,0.677,0.669,0.665,0.661,0.6552,0.6512,0.6462,0.6444,0.6402,0.638,0.636,0.6331,0.6303,0.6288,0.6277,0.6252] 
+pkndelta = [0.76,0.68,0.65,0.63,0.62,0.606,0.597,0.591,0.5845,0.5805,0.577,0.5724,0.5694,0.566,0.5622,0.5594,0.5576,0.5552,0.553,0.5496,0.5479]
 k=20
 iter=size
 if rank==0:

@@ -130,13 +130,13 @@ else:
 M=comm.bcast(M,root=0)
 nodes=len(M)
 q=0
-start=0.89
+start= 0.5496
 stop=0.5
-step=0.01
+step=0.0001
 p=start
 k=20
-delta=0.1
-n=20
+delta=0.05
+n=40
 if rank==0:
 	print(n)
 iter=size
