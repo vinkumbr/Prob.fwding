@@ -72,7 +72,7 @@ def connected_components(nodes,M,b):
 if rank==0:
 	m=31 #keep this to be odd 
 	nodes= m*m
-	lat_type='t'
+	lat_type='g3'
 	if lat_type == 's':
 		M=np.zeros((nodes,4),dtype=np.int)   #stores the reduced adjacency matrix with the M(x,0) the east neighbor; M(x,1) the north neighbor; M(x,2) the west neighbor of x. Entry=-1 when there is no neighbor
 		for i in range(nodes):
@@ -123,6 +123,26 @@ if rank==0:
 			else:
 				M[i][3]=-1
 		#print (M)                 # Note: bottom left vertex has index 0
+	elif lat_type == 'g3':
+		M=np.zeros((nodes,4),dtype=np.int)   #stores the reduced adjacency matrix with the M(x,0) the east neighbor; M(x,1) the north neighbor; M(x,2) the west neighbor of x. Entry=-1 when there is no neighbor
+		jump = 3
+		for i in range(nodes):
+			if i%m!=m-1 and (i//m)%jump == 0:
+				M[i][0]=i+1
+			else:
+				M[i][0]=-1
+			if i<=m*m-m-1:
+				M[i][1]=i+m
+			else:
+				M[i][1]=-1
+			if i%m!=0 and (i//m)%jump == 0:
+				M[i][2]=i-1
+			else:
+				M[i][2]=-1
+			if i>=m:
+				M[i][3]=i-m
+			else:
+				M[i][3]=-1
 else:
 	M=None
 
@@ -131,7 +151,7 @@ nodes=len(M)
 
 q=0
 # This is the pkndelta values obtained using the prob_fwding_parallel.py code on RGG_M.txt
-pkndelta = [0.76,0.68,0.65,0.63,0.62,0.606,0.597,0.591,0.5845,0.5805,0.577,0.5724,0.5694,0.566,0.5622,0.5594,0.5576,0.5552,0.553,0.5496,0.5479]
+pkndelta = [0.938,0.884,0.853,0.833,0.819,0.809,0.801,0.795,0.79,0.7852,0.7806,0.7776,0.775,0.7714,0.768,0.7664,0.7636,0.7612,0.7594,0.7576,0.7552]
 k=20
 iter=size
 if rank==0:
