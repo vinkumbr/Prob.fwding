@@ -20,7 +20,7 @@ taukndelta_1 = [i/nodes for i in taukndelta_1]
 taukndelta_05 = [i/nodes for i in taukndelta_05]
 
 fig1,ax1 = plt.subplots(1,1)
-fig1.set_size_inches(5, 2)
+fig1.set_size_inches(5, 2.5)
 #fig.suptitle('Probabilistic forwarding on a binary tree of height %d with k=100 packets'% H)
 ax1.plot(n,pkndelta_1,'o-', label='$\delta = 0.1$')
 ax1.plot(n,pkndelta_05,'+--', label='$\delta = 0.05$')
@@ -28,12 +28,13 @@ ax1.plot(n,pkndelta_05,'+--', label='$\delta = 0.05$')
 ax1.set_ylabel(r'$p_{\ k,n,\delta}$')
 plt.xlabel('Number of coded packets (n)')
 #plt.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
+plt.tight_layout()
 plt.legend()
 plt.figure
 #plt.show()
 
 fig2,ax2 = plt.subplots(1,1)
-fig2.set_size_inches(5,2)
+fig2.set_size_inches(5,2.5)
 ax2.plot(n,taukndelta_1,'o-', label='$\delta = 0.1$')
 ax2.plot(n,taukndelta_05,'+--', label='$\delta = 0.05$')
 #ax2.plot(n,tau_kndelta_ergodic,'+--',label='from theory')
@@ -42,6 +43,6 @@ plt.xlabel('Number of coded packets (n)')
 #plt.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
 ax2.set_ylabel(r'$\tau_{ k,n,\delta} / N$')
 
-
+plt.tight_layout()
 plt.legend()
 plt.show()
