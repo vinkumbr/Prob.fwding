@@ -83,15 +83,16 @@ def convert(s):
 
 
 if rank==0:
-	M = []
-	with open('./M_doubletree_9.txt','r') as f:
-		for line in f:
-			newPlace=[]
-			currentPlace = line[1:-2]
-			r=convert(currentPlace)
-			s=r.split(', ')
-			newPlace=[int(e) for e in s ]
-			M.append(newPlace)
+#	M = []
+#	with open('./M_doubletree_9.txt','r') as f:
+#		for line in f:
+#			newPlace=[]
+#			currentPlace = line[1:-2]
+#			r=convert(currentPlace)
+#			s=r.split(', ')
+#			newPlace=[int(e) for e in s]
+#			M.append(newPlace)
+	M = hp.reduced_hyperq_adjmat(12)
 	#print(M)
 else:
 	M=None
@@ -100,9 +101,9 @@ M=comm.bcast(M,root=0)
 nodes=len(M)
 q=0
 # This is the pkndelta values obtained using the prob_fwding_parallel.py code on RGG_M.txt
-pkndelta = [0.993,0.945,0.922,0.903,0.89,0.877,0.868,0.859,0.851,0.844,0.838]
-pkt_offset = 10
-k=100
+pkndelta = [0.39,0.32,0.28,0.255,0.235,0.223,0.213,0.206,0.198,0.1925,0.1885,0.185,0.183,0.1786,0.1766,0.1726,0.1707,0.1679,0.1665,0.1651,0.163]
+pkt_offset = 1
+k=20
 iter=size
 if rank==0:
 	tau_kndelta = []
@@ -134,7 +135,7 @@ for l in range(len(pkndelta)):
 		print(tau_kndelta[q])
 	q=q+1
 if rank==0:
-	f=open('tau_kndelta_doubletree_9.txt','a')
+	f=open('tau_kndelta_hypercube_12.txt','a')
 	f.write(str(k)+'\n')
 	#f.write(str(n)+'\n')
 	f.write(str(tau_kndelta)+'\n')
