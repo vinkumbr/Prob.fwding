@@ -7,6 +7,7 @@ import math
 from array import *
 from random import *
 import sys
+import hypercube_adj_mat as hp
 
 
 import datetime
