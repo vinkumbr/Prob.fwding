@@ -60,7 +60,6 @@ tau_kndelta_simu1 = [t/(m*m) for t in tau_kndelta_simu1]
 with open("theta_thetaplus.json") as f:
 	data = json.load(f)
 
-# The lambda values in the file are from 1 to 4.99 in steps of 0.01
 p = data["p"]
 thetap = data["thetap"]
 thetaplus = data["thetaplus"]

@@ -5,6 +5,7 @@ import math
 from array import *
 from random import *
 import sys
+import hypercube_adj_mat as hp
 
 import datetime
 #print(start_time) 
@@ -77,15 +78,16 @@ def convert(s):
 
 # Input the reduced adjacency matrix file with extension .txt in the following if statement
 if rank==0:
-	M = []
-	with open('./M_doubletree_9.txt','r') as f:
-		for line in f:
-			newPlace=[]
-			currentPlace = line[1:-2]
-			r=convert(currentPlace)
-			s=r.split(', ')
-			newPlace=[int(e) for e in s]
-			M.append(newPlace)
+#	M = []
+#	with open('./M_doubletree_9.txt','r') as f:
+#		for line in f:
+#			newPlace=[]
+#			currentPlace = line[1:-2]
+#			r=convert(currentPlace)
+#			s=r.split(', ')
+#			newPlace=[int(e) for e in s]
+#			M.append(newPlace)
+	M = hp.reduced_hyperq_adjmat(12)
 	#print(M)
 else:
 	M=None
@@ -93,13 +95,13 @@ else:
 M=comm.bcast(M,root=0)
 nodes=len(M)
 q=0
-start=0.843
+start=0.6
 stop=0.3
-step=0.0005
+step=0.01
 delta=0.1
 p=start
-k=100
-n=200
+k=20
+n=20
 if rank==0:
 	print(n)
 iter=size
