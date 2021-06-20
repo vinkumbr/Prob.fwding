@@ -2,11 +2,14 @@
 from __future__ import division
 
 import numpy as np
+from mpi4py import MPI
 import math
 from array import *
 from random import *
 import sys
-
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
 import datetime
 def find_comp_origin(M):
 	nodes=len(M)
@@ -63,28 +66,31 @@ def createRGG(z,radius):
 				M[j].append(i)
 	return M
 
-def generatevalidRGG(lbda,m,radius,number):
-	i = 0
-	while i<number:
-		print(i)
-		Phi=createPPP(lbda,m)
-		#print(len(Phi))
-		M=createRGG(Phi,radius)
-		comp_origin = find_comp_origin(M)
-		Phi_origin = [Phi[i] for i in comp_origin]
-		print(len(Phi_origin))
-		M=createRGG(Phi_origin,radius)
-		with open('./AdjMats/comp_origin/RGG_%d_int_%s_id_%d.txt'%(m,lbda,i), 'w') as f:
-			for item in M:
-				f.write("%s\n" % item)
-		i=i+1
+def generatevalidRGG(lbda,m,radius):
+	print(rank)
+	Phi=createPPP(lbda,m)
+	#print(len(Phi))
+	M=createRGG(Phi,radius)
+	comp_origin = find_comp_origin(M)
+	Phi_origin = [Phi[i] for i in comp_origin]
+	print(len(Phi_origin))
+	M=createRGG(Phi_origin,radius)
+	with open('./AdjMats/comp_origin/RGG_%d_int_%s_id_%d.txt'%(m,lbda,rank), 'w') as f:
+		for item in M:
+			f.write("%s\n" % item)
+	i=i+1
 
-print('Input lambda, size of grid (m), radius and the number of graphs you want')
-lbda=input('lambda ')
-m=input('m ')
-radius=input('radius ')
-lbda=float(lbda)
-m=int(m)
-radius=float(radius)
-number=int(input('number'))
-generatevalidRGG(lbda,m,radius,number)
+if rank ==0:
+	print('Input lambda, size of grid (m) and the radius ')
+	lbda=float(input('lambda '))
+	m=int(input('m '))
+	radius=float(input('radius '))
+else:
+	lbda = 4.5
+	m = 101
+	radius = 1
+
+lbda = comm.bcast(lbda,root=0)
+m = comm.bcast(m,root=0)
+radius = comm.bcast(radius,root=0)
+generatevalidRGG(lbda,m,radius)

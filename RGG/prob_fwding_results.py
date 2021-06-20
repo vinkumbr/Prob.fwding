@@ -41,6 +41,8 @@ if lbda == 4.5:
 	pkndelta_simu = [0.498,0.434,0.408,0.395,0.382,0.374,0.368,0.364,0.3601,0.3572,0.3548,0.3522,0.3502,   0.3479,0.3465,0.346,0.3445,0.3437,0.3419,0.3413,0.3404]
 	tau_kndelta_simu = [454096.61, 409689.815, 395773.97, 392819.375, 387389.275, 386460.125, 389011.835, 391003.62, 392094.54, 395676.51, 402518.52, 401771.14, 406296.3, 405092.09, 404213.2, 415875.355, 419580.805, 422831.875, 420917.8, 426195.71, 430323.0]
 
+#Results of running prob_fwding_parallel_recs_avg.py on RGG with M given by ./AdjMats/comp_origin/*.txt with m=101, lambda=4.5 and radius=1. 20 realizations of RGG and 10 prob forwarding on each. Graph consists of component of the origin
+pkndelta_simu = [0.52,0.445,0.415,0.399]
 
 #Results of running prob_fwding_parallel.py on a RGG with M given by RGG_M.txt with m=101, lambda=4.54 and radius=1 
 #if lbda == 4.54:
