@@ -81,10 +81,10 @@ def convert(s):
     # separating words by str1 
     return(str1.join(s)) 
 
-num_graphs = 10
+num_graphs = 20
 RGGid = rank%num_graphs
 M = []
-with open('./AdjMats/RGG4.0_average/RGG_101_int_4.0_id_%d.txt'%(RGGid),'r') as f:
+with open('./AdjMats/comp_origin/RGG_101_int_4.0_id_%d.txt'%(RGGid),'r') as f:
 	for line in f:
 		newPlace=[]
 		currentPlace = line[1:-2]
@@ -96,7 +96,8 @@ with open('./AdjMats/RGG4.0_average/RGG_101_int_4.0_id_%d.txt'%(RGGid),'r') as f
 nodes=len(M)
 q=0
 # This is the pkndelta values obtained using the prob_fwding_parallel.py code on RGG_M.txt
-pkndelta = [0.59,0.5,0.47,0.449,0.433,0.425,0.416,0.41,0.4075,0.402,0.3995,0.3969,0.3937,0.3918,0.3904,0.3884,0.3868,0.3851,0.3839,0.3826,0.3822]
+pkndelta = [0.55,0.49,0.46,0.438,0.426,0.4195,0.4116,0.406,0.402,0.399,0.3958,0.3936,0.3919,
+0.3898,0.38830,0.3864,0.385,0.3839,0.3829,0.3819,0.38100]
 k=20
 iter=size
 if rank==0:

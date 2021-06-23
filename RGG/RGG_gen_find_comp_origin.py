@@ -1,4 +1,6 @@
-
+# This code generates reduced adjacency matrices for the graphs corresponding to the component of the origin in an RGG. This code has to be run using the following command. 
+# mpirun -n 20 python RGG_gen_find_comp_origin.py 
+# The number of graphs generated is 20 here. This can be changed as required
 from __future__ import division
 
 import numpy as np
