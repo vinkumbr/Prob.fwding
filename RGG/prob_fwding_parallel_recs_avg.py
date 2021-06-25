@@ -87,9 +87,9 @@ def convert(s):
 k=20
 q=0
 n=20
-start=0.392
+start=0.9
 stop=0.3
-step=0.0001
+step=0.01
 delta=0.1
 num_graphs=20
 
@@ -103,7 +103,7 @@ recs=[]
 while p>stop:
 	RGGid = rank%num_graphs
 	M = []
-	with open('./AdjMats/RRG/rigin/RRG_nodes_1000_deg_4_no_%d.txt'%(RGGid),'r') as f:
+	with open('./AdjMats/RRG/RRG_nodes_1000_deg_4_no_%d.txt'%(RGGid),'r') as f:
 		for line in f:
 			newPlace=[]
 			currentPlace = line[1:-2]
