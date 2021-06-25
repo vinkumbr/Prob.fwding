@@ -99,11 +99,16 @@ f = interp1d(lamb,theta_lambda_251)
 theta_lbda_p = f(lbda_p)
 theta_lbda_p_square = theta_lbda_p*theta_lbda_p
 theta_plus = theta_lbda_p 
+theta_denom = f(lbda)
+print(theta_denom)
+delta_prime = 1-theta_denom*(1-delta)
+print(delta_prime)
 index = 0
 print(k)
 pkndelta_ergodic = np.zeros(k+1)
 n=k
 while n<=40:
+	print(n)
 	minp_index = 0
 	prob_cdf = np.zeros(len(p))
 	prob_sum = np.zeros(len(p))

@@ -2,7 +2,6 @@
 import matplotlib.pyplot as plt
 import json
 
-m=101
 
 #import from simu_results.json file
 with open("doubletree_simu_results.json") as f:
@@ -12,6 +11,7 @@ height = data["height"]
 k = data["k"]
 pkndelta = data["pkndelta"]
 tau_kndelta = data["tau_kndelta"]
+
 print(k)
 print(height)
 N = 3*2**height-2
