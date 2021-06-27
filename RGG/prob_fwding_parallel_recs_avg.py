@@ -86,10 +86,10 @@ def convert(s):
 
 k=20
 q=0
-n=20
-start=0.9
+n=40
+start=0.462
 stop=0.3
-step=0.01
+step=0.0001
 delta=0.1
 num_graphs=20
 

@@ -87,7 +87,7 @@ if rank==0:
 #			s=r.split(', ')
 #			newPlace=[int(e) for e in s]
 #			M.append(newPlace)
-	M = hp.reduced_hyperq_adjmat(12)
+	M = hp.reduced_hyperq_adjmat(10)
 	#print(M)
 else:
 	M=None
@@ -95,13 +95,13 @@ else:
 M=comm.bcast(M,root=0)
 nodes=len(M)
 q=0
-start=0.6
-stop=0.3
-step=0.01
+start=0.1215
+stop=0.05
+step=0.0001
 delta=0.1
 p=start
 k=20
-n=20
+n=700
 if rank==0:
 	print(n)
 iter=size

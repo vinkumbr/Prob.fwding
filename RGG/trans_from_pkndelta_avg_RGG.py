@@ -84,7 +84,7 @@ def convert(s):
 num_graphs = 20
 RGGid = rank%num_graphs
 M = []
-with open('./AdjMats/comp_origin/RGG_101_int_4.0_id_%d.txt'%(RGGid),'r') as f:
+with open('./AdjMats/RRG/RRG_nodes_1000_deg_4_no_%d.txt'%(RGGid),'r') as f:
 	for line in f:
 		newPlace=[]
 		currentPlace = line[1:-2]
@@ -96,8 +96,7 @@ with open('./AdjMats/comp_origin/RGG_101_int_4.0_id_%d.txt'%(RGGid),'r') as f:
 nodes=len(M)
 q=0
 # This is the pkndelta values obtained using the prob_fwding_parallel.py code on RGG_M.txt
-pkndelta = [0.55,0.49,0.46,0.438,0.426,0.4195,0.4116,0.406,0.402,0.399,0.3958,0.3936,0.3919,
-0.3898,0.38830,0.3864,0.385,0.3839,0.3829,0.3819,0.38100]
+pkndelta = [0.8,0.7,0.64,0.61,0.588,0.564,0.55,0.53,0.518,0.509,0.5038,0.4982,0.4918,0.4854,0.4808, 0.4759,0.4728,0.4691,0.4651,0.4616]
 k=20
 iter=size
 if rank==0:

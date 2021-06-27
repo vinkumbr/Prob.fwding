@@ -93,7 +93,7 @@ if rank==0:
 #			s=r.split(', ')
 #			newPlace=[int(e) for e in s]
 #			M.append(newPlace)
-	M = hp.reduced_hyperq_adjmat(12)
+	M = hp.reduced_hyperq_adjmat(10)
 	#print(M)
 else:
 	M=None
@@ -102,9 +102,10 @@ M=comm.bcast(M,root=0)
 nodes=len(M)
 q=0
 # This is the pkndelta values obtained using the prob_fwding_parallel.py code on RGG_M.txt
-pkndelta = [0.39,0.32,0.28,0.255,0.235,0.223,0.213,0.206,0.198,0.1925,0.1885,0.185,0.183,0.1786,0.1766,0.1726,0.1707,0.1679,0.1665,0.1651,0.163]
-pkt_offset = 1
+pkndelta = [0.1442,0.1394,0.1362,0.1331,0.1308,0.1286,0.1267,0.1252,0.1238,0.1222,0.1213]
+pkt_offset = 50
 k=20
+k_new = 200
 iter=size
 if rank==0:
 	tau_kndelta = []
@@ -112,7 +113,7 @@ if rank==0:
 	print(iter)
 for l in range(len(pkndelta)):
 	tau = np.zeros(1)
-	n=k+l*pkt_offset
+	n=k_new+l*pkt_offset
 	p=pkndelta[l]
 	trans = np.zeros(1)
 	for i in range(n):
