@@ -4,7 +4,7 @@ Required packages
 2. mpi
 3. random
 
-This repository has three subfolders corresponding to trees, grids and random geometric graphs. In each subfolder, the graph is specified using
+This repository has four subfolders corresponding to trees, grids, random geometric graphs (RGG) and other general graphs (Graphs). In each subfolder, the graph is specified using
 M - Reduced adjacency matrix for a graph: The i-th roww of the matrix contains the neighburs of vertex i. Vertex 0 is often taken to be the source.
 
 The main code which implements probabilistic forwarding to find the minimum forwarding probability is prob_fwding_parallel.py. To adapt it to different graph structures the matrix M has to be changed. To find the expected total number of transmissions, use trans_from_pkndelta_parallel.py with the probability values obtained using the corresponding prob_fwding_parallel.py code.
