@@ -125,6 +125,7 @@ while n<=40:
 	index = index+1
 	n=n+1
 print(pkndelta_ergodic)
+pkndelta_ergodic = pkndelta_ergodic / theta_denom
 prob_from_simu = np.array(pkndelta_simu)
 thetaplus_pfs = f(lbda*prob_from_simu)
 tau_kndelta_pfs = lbda*prob_from_simu*thetaplus_pfs**2*np.arange(k,k+len(prob_from_simu))
