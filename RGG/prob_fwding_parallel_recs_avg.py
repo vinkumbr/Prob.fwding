@@ -7,6 +7,7 @@ from __future__ import division
 from mpi4py import MPI
 import numpy as np
 import math
+import json
 from array import *
 from random import *
 import sys
@@ -85,37 +86,44 @@ def convert(s):
     return(str1.join(s)) 
 
 k=20
-q=0
-n=40
-start=0.462
-stop=0.3
-step=0.0001
+n=20
+start=0.53
+stop=0.51
+step=0.001
 delta=0.1
-num_graphs=20
+num_graphs=10
+q=0
 
 p=start
+print(size,rank)
 
 if rank==0:
 	print(n)
+	dict = {"k":k,"n":n,"delta":delta,"pstart":start,"pstop":stop,"pstep":step}
+	frac_R_succ_p = []# np.zeros([int((start-stop)//step+1),size])
+	first_instance = True
 iter=size
 recs=[]
-#print(rank)
+#print(size,rank)
 while p>stop:
+	#print(rank,p)
 	RGGid = rank%num_graphs
 	M = []
-	with open('./AdjMats/RRG/RRG_nodes_1000_deg_4_no_%d.txt'%(RGGid),'r') as f:
+	#with open('./AdjMats/test_formula/RGG_101_int_4.5_id_%d.txt'%(RGGid),'r') as f:
+	with open('./AdjMats/RGG4.5_average/RGG%d_101_int_4.5.txt'%(RGGid),'r') as f:
 		for line in f:
 			newPlace=[]
 			currentPlace = line[1:-2]
 			r=convert(currentPlace)
 			s=r.split(', ')
-			newPlace=[int(e) for e in s ]
+			#print(s)
+			newPlace=[int(e) for e in s]
 			M.append(newPlace)
-
 	nodes=len(M)
+	#print(nodes)
 
 	R_succ=np.zeros(1)
-	frac_R_succ = np.zeros(1)
+	#frac_R_succ = np.zeros(1)
 	Efrac_R_succ=np.zeros(1)
 	R=np.zeros(nodes)
 	for i in range(n):
@@ -133,29 +141,40 @@ while p>stop:
 	R_succ[0]=len(R[R>=k])
 	frac_R_succ = R_succ[0]/nodes
 	comm.Barrier()
-	comm.Reduce(frac_R_succ, Efrac_R_succ, op=MPI.SUM, root=0)
+	frac_R_succ = comm.gather(frac_R_succ, root=0)
+	#comm.Reduce(frac_R_succ, Efrac_R_succ, op=MPI.SUM, root=0)
 
 	if rank==0:
 		start_time = datetime.datetime.now()
 		print(p)
 		print(start_time)
+		#print(frac_R_succ)
+		frac_R_succ_p.append(frac_R_succ)
+		Efrac_R_succ[0] = sum(frac_R_succ)
 		recs.append(Efrac_R_succ[0]/iter)
+		if recs[q]<(1-delta) and first_instance == True:
+			pkndelta = p+step
+			first_instance = False
+			print(pkndelta)
 		print(recs[q])
-		if recs[q]<(1-delta):
-			break
 	p=p-step
 	q=q+1
 
 if rank==0:
-	f=open('pkndelta_avg_realizations.txt','a')
-	f.write(str(k)+'\n')
-	f.write(str(n)+'\n')
-	f.write(str(p+step)+'\n')
-	f.write(str(datetime.datetime.now())+'\n')
+	dict["frac_R_succ_p"] = frac_R_succ_p
+	json = json.dumps(dict)
+	g= open('recs_all_realizations_%d.json'%(n),"w")
+	g.write(json)
+	g.close()
 	print(k)
 	print(n)
 	print(p+step)
 	print(datetime.datetime.now())
+	f=open('pkndelta_avg_realizations.txt','a')
+	f.write('k='+str(k)+'\n')
+	f.write('n='+str(n)+'\n')
+	f.write('pkndelta='+str(pkndelta)+'\n')
+	f.write(str(datetime.datetime.now())+'\n')
 	f.close()
 
 
